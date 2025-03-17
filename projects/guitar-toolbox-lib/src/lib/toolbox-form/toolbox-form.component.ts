@@ -1,14 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SCALE_PATTERNS } from '../shared/model/scaleTypes';
 import { QueryTypes, ToolboxSearchQuery } from '../shared/model/musicElements';
-import { CHORD_PATTERNS } from '../shared/model/chordTypes';
+import { CHORD_PATTERNS, neckConfig, SCALE_PATTERNS } from 'guitar-neck-shared';
 import { CustomPatternComponent } from '../custom-pattern/custom-pattern.component';
-import { neckConfig } from '../shared/model/neckConfig';
 
 @Component({
-  selector: 'app-toolbox-form',
+  selector: 'lib-toolbox-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgFor, NgIf, CustomPatternComponent],
   templateUrl: './toolbox-form.component.html',
@@ -16,7 +14,7 @@ import { neckConfig } from '../shared/model/neckConfig';
 })
 export class ToolboxFormComponent {
   @Output() onSubmit$: EventEmitter<ToolboxSearchQuery> = new EventEmitter<ToolboxSearchQuery>();
-  guitarForm!: FormGroup;
+  guitarForm: FormGroup;
 
   keys = neckConfig.chromaticNotes;
 
@@ -32,7 +30,7 @@ export class ToolboxFormComponent {
     chord: CHORD_PATTERNS.map(chord => chord.name),
   };
 
-  availablePatterns: string[] = this.patterns['basic'];  // Fixed: using bracket notation
+  availablePatterns: string[] = this.patterns['basic'];
   selectedElementType: QueryTypes = 'basic';
 
   showCustomPattern = false;
@@ -44,7 +42,6 @@ export class ToolboxFormComponent {
       key: this.keys[0] || 'C'
     });
 
-    // React to element type changes
     this.guitarForm.get('elementType')?.valueChanges.subscribe(type => {
       this.availablePatterns = this.patterns[type];
       this.selectedElementType = type;

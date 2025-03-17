@@ -1,0 +1,19 @@
+# Ignoruj pliki testowe
+*.spec.ts
+*.spec.js
+*.test.ts
+*.test.js
+
+# Ignoruj pliki konfiguracyjne
+karma.conf.js
+tsconfig.*.json
+*.tsbuildinfo
+
+# Ignoruj pliki dokumentacji
+documentation/
+*.md
+!README.md
+
+# Ignoruj pliki przykładów
+example/
+demo/
