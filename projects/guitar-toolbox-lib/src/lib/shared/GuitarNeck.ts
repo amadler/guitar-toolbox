@@ -2,7 +2,7 @@
  * Represents a guitar neck.
  */
 
-import { NeckConfig } from "./model/neckConfig";
+import { NeckConfig } from "guitar-neck-shared";
 
 class GuitarNeck {
   private neckConfig: NeckConfig;
@@ -12,7 +12,7 @@ class GuitarNeck {
   public guitarNeckArray: string[][]
 
 
-  constructor(neckConfig: any) {
+  constructor(neckConfig: NeckConfig) {
     this.neckConfig = neckConfig;
     this.stringNotes = this.neckConfig.stringNotes;
     this.frets = this.neckConfig.numberOfFrets;
