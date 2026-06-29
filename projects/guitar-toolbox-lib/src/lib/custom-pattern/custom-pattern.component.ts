@@ -5,7 +5,7 @@ import { neckConfig } from 'guitar-neck-shared';
 import { ToolboxSearchQuery } from '../shared/model/musicElements';
 
 @Component({
-  selector: 'app-custom-pattern',
+  selector: 'lib-custom-pattern',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './custom-pattern.component.html',

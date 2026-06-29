@@ -1,101 +1,102 @@
-import { TestBed } from '@angular/core/testing';
-import {
-  Command,
-  DisplaySingleNoteCommand,
-  DisplayAllNotesCommand,
-  DisplayScaleCommand,
-  DisplayChordCommand
-} from './UICommands';
-import { GuitarNeckService } from '../services/guitar-neck.service';
-import { NoteService } from '../services/note.service';
-import { NoteSelectionService } from '../services/note-selection.service';
-import { GuitarNote } from './model/guitarNote';
-import { SCALE_PATTERNS } from './model/scaleTypes';
+import { of, throwError } from 'rxjs';
+import { DisplayAllNotesCommand, DisplayChordCommand, DisplayCustomPatternCommand, DisplayScaleCommand, DisplaySingleNoteCommand, NoteSelector } from './UICommands';
 
 describe('UICommands', () => {
-  let guitarNeckService: jasmine.SpyObj<GuitarNeckService>;
-  let noteService: jasmine.SpyObj<NoteService>;
-  let noteSelectionService: jasmine.SpyObj<NoteSelectionService>;
+  let mockNoteSelector: jasmine.SpyObj<NoteSelector>;
 
   beforeEach(() => {
-    guitarNeckService = jasmine.createSpyObj('GuitarNeckService', ['selectNotes', 'showAllNotes']);
-    noteService = jasmine.createSpyObj('NoteService', ['getNotesByNoteName']);
-    noteSelectionService = jasmine.createSpyObj('NoteSelectionService', ['selectScale', 'selectTriad']);
-
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: GuitarNeckService, useValue: guitarNeckService },
-        { provide: NoteService, useValue: noteService },
-        { provide: NoteSelectionService, useValue: noteSelectionService }
-      ]
-    });
+    mockNoteSelector = jasmine.createSpyObj('NoteSelector', [
+      'selectChord',
+      'selectScale',
+      'selectNote',
+      'selectAllNotes',
+      'selectNotes'
+    ]);
   });
 
   describe('DisplaySingleNoteCommand', () => {
-    it('should select notes for a given key', () => {
-      const mockNotes: GuitarNote[] = [
-        { string: 1, fret: 0, note: 'A', selected: false, isRoot: false, isFifth: false, isThird: false, visible: true }
-      ];
-      noteService.getNotesByNoteName.and.returnValue(mockNotes);
-
-      const command = new DisplaySingleNoteCommand(noteService, guitarNeckService, 'A');
+    it('should call selectNote with the given key', () => {
+      const command = new DisplaySingleNoteCommand(mockNoteSelector, 'A');
       command.execute();
 
-      expect(noteService.getNotesByNoteName).toHaveBeenCalledWith('A');
-      expect(guitarNeckService.selectNotes).toHaveBeenCalledWith(mockNotes);
+      expect(mockNoteSelector.selectNote).toHaveBeenCalledWith('A');
     });
   });
 
   describe('DisplayAllNotesCommand', () => {
-    it('should show all notes', () => {
-      const command = new DisplayAllNotesCommand(guitarNeckService);
+    it('should call selectAllNotes', () => {
+      const command = new DisplayAllNotesCommand(mockNoteSelector);
       command.execute();
 
-      expect(guitarNeckService.showAllNotes).toHaveBeenCalled();
+      expect(mockNoteSelector.selectAllNotes).toHaveBeenCalled();
     });
   });
 
   describe('DisplayScaleCommand', () => {
-    let scalePatternsSpy: jasmine.Spy;
+    it('should call selectScale and log notes on success', () => {
+      mockNoteSelector.selectScale.and.returnValue(of(['C', 'D', 'E', 'F', 'G', 'A', 'B']));
+      spyOn(console, 'log');
 
-    beforeEach(() => {
-      scalePatternsSpy = spyOn(SCALE_PATTERNS, 'find');
-    });
-
-    it('should select scale when pattern exists', () => {
-      scalePatternsSpy.and.returnValue({ name: 'Major', intervals: [2, 2, 1, 2, 2, 2, 1] });
-      const command = new DisplayScaleCommand(noteSelectionService, 'Major', 'C');
+      const command = new DisplayScaleCommand(mockNoteSelector, 'Major', 'C');
       command.execute();
 
-      expect(noteSelectionService.selectScale).toHaveBeenCalledWith('Major', 'C');
+      expect(mockNoteSelector.selectScale).toHaveBeenCalledWith('Major', 'C');
+      expect(console.log).toHaveBeenCalledWith('Scale displayed:', ['C', 'D', 'E', 'F', 'G', 'A', 'B']);
     });
 
-    it('should log error when scale pattern not found', () => {
-      scalePatternsSpy.and.returnValue(undefined);
+    it('should log error when selectScale fails', () => {
+      mockNoteSelector.selectScale.and.returnValue(throwError(() => new Error('API error')));
       spyOn(console, 'error');
-      const command = new DisplayScaleCommand(noteSelectionService, 'InvalidScale', 'C');
+
+      const command = new DisplayScaleCommand(mockNoteSelector, 'Invalid', 'C');
       command.execute();
 
-      expect(console.error).toHaveBeenCalledWith('Scale pattern not found: InvalidScale');
-      expect(noteSelectionService.selectScale).not.toHaveBeenCalled();
+      expect(mockNoteSelector.selectScale).toHaveBeenCalledWith('Invalid', 'C');
+      expect(console.error).toHaveBeenCalledWith('Error displaying scale:', jasmine.any(Error));
     });
   });
 
-  describe('DisplayTriadCommand', () => {
-    it('should select triad when pattern exists', () => {
-      const command = new DisplayChordCommand(noteSelectionService, 'Major Triad', 'C');
+  describe('DisplayChordCommand', () => {
+    it('should call selectChord and log notes on success', () => {
+      mockNoteSelector.selectChord.and.returnValue(of(['C', 'E', 'G']));
+      spyOn(console, 'log');
+
+      const command = new DisplayChordCommand(mockNoteSelector, 'Major Triad', 'C');
       command.execute();
 
-      expect(noteSelectionService.selectChord).toHaveBeenCalledWith('C', 'Major Triad');
+      expect(mockNoteSelector.selectChord).toHaveBeenCalledWith('Major Triad', 'C');
+      expect(console.log).toHaveBeenCalledWith('Chord displayed:', ['C', 'E', 'G']);
     });
 
-    it('should log error when triad pattern not found', () => {
+    it('should log error when selectChord fails', () => {
+      mockNoteSelector.selectChord.and.returnValue(throwError(() => new Error('Not found')));
       spyOn(console, 'error');
-      const command = new DisplayChordCommand(noteSelectionService, 'InvalidTriad', 'C');
+
+      const command = new DisplayChordCommand(mockNoteSelector, 'Invalid', 'C');
       command.execute();
 
-      expect(console.error).toHaveBeenCalledWith('Triad pattern not found: InvalidTriad');
-      expect(noteSelectionService.selectChord).not.toHaveBeenCalled();
+      expect(mockNoteSelector.selectChord).toHaveBeenCalledWith('Invalid', 'C');
+      expect(console.error).toHaveBeenCalledWith('Error displaying chord:', jasmine.any(Error));
+    });
+  });
+
+  describe('DisplayCustomPatternCommand', () => {
+    it('should calculate notes from intervals and call selectNotes', () => {
+      mockNoteSelector.selectNotes.and.returnValue(of(['C', 'E', 'G']));
+
+      const command = new DisplayCustomPatternCommand(mockNoteSelector, [4, 3], 'C');
+      command.execute();
+
+      expect(mockNoteSelector.selectNotes).toHaveBeenCalledWith(['C', 'E', 'G'], 'C');
+    });
+
+    it('should wrap around the chromatic scale', () => {
+      mockNoteSelector.selectNotes.and.returnValue(of([]));
+
+      const command = new DisplayCustomPatternCommand(mockNoteSelector, [11], 'C');
+      command.execute();
+
+      expect(mockNoteSelector.selectNotes).toHaveBeenCalledWith(['C', 'B'], 'C');
     });
   });
 });

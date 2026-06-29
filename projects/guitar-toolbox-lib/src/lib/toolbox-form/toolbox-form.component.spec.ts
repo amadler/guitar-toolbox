@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ToolboxFormComponent } from './toolbox-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ToolboxSearchQuery } from '../shared/model/musicElements';
 
 describe('ToolboxFormComponent', () => {
   let component: ToolboxFormComponent;
@@ -23,11 +22,7 @@ describe('ToolboxFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formGroup with Single note control', () => {
-    const mockControls: ToolboxSearchQuery = {
-      keys: 'A',
-      musicElements: 'Single note'
-    };
+  it('should initialize formGroup with default values', () => {
     expect(component.guitarForm.value).toEqual({
       elementType: 'basic',
       pattern: 'Single note',
@@ -60,7 +55,8 @@ describe('ToolboxFormComponent', () => {
 
     expect(component.onSubmit$.emit).toHaveBeenCalledOnceWith({
       musicElements: 'Single note',
-      keys: 'A'
+      keys: 'A',
+      type: 'basic'
     });
   });
 });

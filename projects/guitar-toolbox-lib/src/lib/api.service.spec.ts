@@ -1,16 +1,51 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ApiService } from './api.service';
 
 describe('ApiService', () => {
   let service: ApiService;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule]
+    });
     service = TestBed.inject(ApiService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should send a GET request to the correct endpoint', () => {
+    const query = { type: 'scale', musicElements: 'Major', keys: 'C' };
+
+    service.sendToolboxRequest(query).subscribe(response => {
+      expect(response).toEqual({ notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'] });
+    });
+
+    const req = httpTestingController.expectOne('http://localhost:3000/api/scales/Major/C');
+    expect(req.request.method).toBe('GET');
+    req.flush({ notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'] });
+  });
+
+  it('should throw an error for 404 status', () => {
+    const query = { type: 'scale', musicElements: 'NonExistent', keys: 'C' };
+
+    service.sendToolboxRequest(query).subscribe({
+      next: () => fail('Expected an error'),
+      error: (error: Error) => {
+        expect(error.message).toBe('Endpoint not found. Please check if the API server is running.');
+      }
+    });
+
+    const req = httpTestingController.expectOne('http://localhost:3000/api/scales/NonExistent/C');
+    req.flush('Not found', { status: 404, statusText: 'Not Found' });
   });
 });

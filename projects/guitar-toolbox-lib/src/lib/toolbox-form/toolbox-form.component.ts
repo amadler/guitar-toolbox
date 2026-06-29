@@ -1,6 +1,7 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { QueryTypes, ToolboxSearchQuery } from '../shared/model/musicElements';
 import { CHORD_PATTERNS, neckConfig, SCALE_PATTERNS } from 'guitar-neck-shared';
 import { CustomPatternComponent } from '../custom-pattern/custom-pattern.component';
@@ -12,9 +13,10 @@ import { CustomPatternComponent } from '../custom-pattern/custom-pattern.compone
   templateUrl: './toolbox-form.component.html',
   styleUrls: ['./toolbox-form.component.scss']
 })
-export class ToolboxFormComponent {
+export class ToolboxFormComponent implements OnDestroy {
   @Output() onSubmit$: EventEmitter<ToolboxSearchQuery> = new EventEmitter<ToolboxSearchQuery>();
   guitarForm: FormGroup;
+  private valueChangesSub?: Subscription;
 
   keys = neckConfig.chromaticNotes;
 
@@ -42,7 +44,7 @@ export class ToolboxFormComponent {
       key: this.keys[0] || 'C'
     });
 
-    this.guitarForm.get('elementType')?.valueChanges.subscribe(type => {
+    this.valueChangesSub = this.guitarForm.get('elementType')?.valueChanges.subscribe(type => {
       this.availablePatterns = this.patterns[type];
       this.selectedElementType = type;
       this.guitarForm.patchValue({ pattern: this.availablePatterns[0] });
@@ -63,5 +65,9 @@ export class ToolboxFormComponent {
 
   onCustomPatternSubmit(query: ToolboxSearchQuery) {
     this.onSubmit$.emit(query);
+  }
+
+  ngOnDestroy(): void {
+    this.valueChangesSub?.unsubscribe();
   }
 }
