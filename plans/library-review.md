@@ -195,3 +195,109 @@ Legenda kolorów:
 6. **Eksporty** — rozszerzenie `public-api.ts`
 7. **Konfigurowalny URL API** — `InjectionToken<string>` dla `API_BASE_URL`
 8. **Refaktory optymalizacyjne** — CSS, typy `any`, inline style
+
+---
+
+## 7. Zgodność z nową strategią stylowania (BEM + CSS Custom Properties API)
+
+Status: **❌ NIEZGODNE — wymaga pełnej migracji**
+
+Biblioteka nie spełnia norm zdefiniowanych w architekturze (prompt architekta containera). Poniżej szczegółowa analiza komponentów.
+
+### 7.1 ToolboxFormComponent — template
+
+| Element | Stan obecny | Wymagany | Status |
+|---------|-------------|----------|--------|
+| Tytuł | `<h2 class="section-title">` | `<h2 class="toolbox__title">` | ❌ |
+| Mode selector container | `<div class="mode-selector">` | `<div class="toolbox__mode-selector">` | ❌ |
+| Mode selector buttons | `<button [class.active]>` | `<button class="toolbox__mode-btn" [class.toolbox__mode-btn--active]>` | ❌ |
+| Form container | `<form>` (brak klasy) | `<form class="toolbox__form">` | ❌ |
+| Field wrappers | `<div class="form-row">` | `<div class="toolbox__field">` | ❌ |
+| Labeli | `<label>` (brak klasy) | `<label class="toolbox__label">` | ❌ |
+| Select | `<select class="form-select">` | `<select class="toolbox__select">` | ❌ |
+| Submit button | `<button [style.backgroundColor]="'#004400'" [style.color]="'#ffffff'">` | `<button class="toolbox__submit">` (bez inline styli) | ❌ |
+| Custom pattern selector | `<lib-custom-pattern>` | `<app-custom-pattern>` **Uwaga: komponent ma selektor `lib-custom-pattern`, więc zostawiamy obecną nazwę** | ⚠️ |
+
+### 7.2 CustomPatternComponent — template
+
+| Element | Stan obecny | Wymagany | Status |
+|---------|-------------|----------|--------|
+| Form container | `<form class="custom-pattern-form">` | `<form class="toolbox__custom-form">` | ❌ |
+| Field wrappers | `<div class="form-row">` | `<div class="toolbox__field">` | ❌ |
+| Labeli | `<label>` (brak klasy) | `<label class="toolbox__label">` | ❌ |
+| Input interwałów | `<input class="form-input">` | `<input class="toolbox__input">` | ❌ |
+| Hint | `<small>` (brak klasy) | `<small class="toolbox__hint">` | ❌ |
+| Select | `<select class="form-select">` | `<select class="toolbox__select">` | ❌ |
+| Submit button | `<button>` (brak klasy) | `<button class="toolbox__submit">` | ❌ |
+
+### 7.3 ToolboxFormComponent — style (SCSS)
+
+| Obszar | Stan obecny | Wymagany | Status |
+|--------|-------------|----------|--------|
+| Klasy CSS | `.section-title`, `form`, `.form-row`, `.form-select`, `button`, `.mode-selector` | `.toolbox__title`, `.toolbox__form`, `.toolbox__field`, `.toolbox__select`, `.toolbox__submit`, `.toolbox__mode-selector`, `.toolbox__mode-btn`, `.toolbox__mode-btn--active` | ❌ |
+| Kolory | `#004400`, `#ccc`, `white`, `rgba(0,68,0,0.1)`, `var(--primary-color)` | tylko `var(--toolbox-*)` z neutralnymi fallbackami | ❌ |
+| Border-radius | `4px` | `var(--toolbox-radius, 0)` / `var(--toolbox-radius-sm, 0)` | ❌ |
+| Border | `1px solid #ccc` | osobno width/style/color; color przez `var(--toolbox-border-color, transparent)` | ❌ |
+| Background | `background-color: white`, `background: none` | `var(--toolbox-bg, transparent)` | ❌ |
+| Focus outline | `border-color: var(--primary-color)` | `border-color: var(--toolbox-accent, currentColor)` | ❌ |
+
+### 7.4 CustomPatternComponent — style (SCSS)
+
+| Obszar | Stan obecny | Wymagany | Status |
+|--------|-------------|----------|--------|
+| Klasy CSS | `.custom-pattern-form`, `.form-row`, `.form-input`, `.form-select`, `button` | `.toolbox__custom-form`, `.toolbox__field`, `.toolbox__input`, `.toolbox__select`, `.toolbox__submit` | ❌ |
+| Kolory | `#004400`, `#ccc`, `white`, `#666`, `#cccccc` | tylko `var(--toolbox-*)` z neutralnymi fallbackami | ❌ |
+| Border-radius | `4px` | `var(--toolbox-radius-sm, 0)` | ❌ |
+| Border | `1px solid #ccc` | osobno width/style/color | ❌ |
+| Background | `background-color: #004400` | `var(--toolbox-accent, transparent)` | ❌ |
+| Disabled button | `background-color: #cccccc` | `opacity: 0.5; cursor: not-allowed;` (bez background) | ❌ |
+| Hint color | `color: #666` | `color: var(--toolbox-muted, inherit)` | ❌ |
+| Focus outline | `border-color: var(--primary-color)` | `border-color: var(--toolbox-accent, currentColor)` | ❌ |
+
+### 7.5 Neutral fallback rule — compliance matrix
+
+| Reguła | Status |
+|--------|--------|
+| Wszystkie `background` używają `var(--toolbox-bg, transparent)` lub `var(--toolbox-accent-bg, transparent)` | ❌ — są hardcodowane |
+| Wszystkie `color` używają `var(--toolbox-text, inherit)` lub `var(--toolbox-accent, currentColor)` itp. | ❌ — są hardcodowane |
+| `border-color` oddzielony od `border-width/style`, używa `var(--toolbox-border-color, transparent)` | ❌ — shorthand `1px solid #ccc` |
+| `border-radius` używa `var(--toolbox-radius, 0)` / `var(--toolbox-radius-sm, 0)` | ❌ — `4px` numeric |
+| `opacity` i `cursor` to wartości rzeczywiste (zachowanie — odpowiedzialność biblioteki) | ✅ — już są poprawne |
+
+### 7.6 BEM naming compliance
+
+| Reguła | Status |
+|--------|--------|
+| Wszystkie klasy `.toolbox__*` | ❌ — wszystkie są stare |
+| Modyfikatory `.toolbox__*--*` | ❌ — używane `[class.active]` bez BEM |
+| Brak starych klas (`.form-row`, `.form-select`, itp.) | ❌ — cały kod ich używa |
+
+### 7.7 CSS Variables API (kontrakt — do udokumentowania)
+
+Poniższa tabela to kontrakt CSS Custom Properties, które biblioteka eksponuje. Host app ustawia je w `:root` lub na selektorze komponentu.
+
+| Variable | Fallback | Used by | Kategoria |
+|----------|----------|---------|-----------|
+| `--toolbox-bg` | `transparent` | wszystkie komponenty | Background |
+| `--toolbox-text` | `inherit` | wszystkie komponenty | Tekst |
+| `--toolbox-border-color` | `transparent` | inputy, selecty | Border color |
+| `--toolbox-radius` | `0` | przyciski, mode selector | Border radius (duży) |
+| `--toolbox-radius-sm` | `0` | inputy, selecty | Border radius (mały) |
+| `--toolbox-gap` | `18px` / `20px` | formularze, mode selector | Layout gap |
+| `--toolbox-accent` | `currentColor` | submit btn, active | Kolor akcentu |
+| `--toolbox-accent-text` | `inherit` | submit btn | Tekst na akcencie |
+| `--toolbox-accent-bg` | `transparent` | aktywny mode btn | Background active |
+| `--toolbox-muted` | `inherit` | hinty | Tekst muted |
+
+---
+
+## 8. Aktualizacja priorytetów
+
+Nowy priorytet P0 (krytyczny — przed dalszymi pracami):
+
+| Priorytet | Obszar | Pliki | Zależności |
+|-----------|--------|-------|------------|
+| 🔴 P0a | Migracja template ToolboxFormComponent na BEM + CSS vars | [`toolbox-form.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.ts) | usunięcie `styleUrls`/`templateUrl`, dodanie `template`/`styles` inline |
+| 🔴 P0b | Migracja template CustomPatternComponent na BEM + CSS vars | [`custom-pattern.component.ts`](projects/guitar-toolbox-lib/src/lib/custom-pattern/custom-pattern.component.ts) | jw. |
+| 🔴 P0c | Usunięcie inline styli `[style.backgroundColor]` i `[style.color]` | [`toolbox-form.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.ts) | po migracji template i styli |
+| 🔴 P0d | Aktualizacja testów `ToolboxFormComponent.spec.ts` do nowego BEM markupu | [`toolbox-form.component.spec.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.spec.ts) | po P0a |

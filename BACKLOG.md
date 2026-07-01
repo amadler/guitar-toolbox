@@ -49,6 +49,40 @@ OPEN
 
 ---
 
+# BEM markup + CSS Custom Properties API dla toolbox-form i custom-pattern
+
+## Motivation
+Biblioteka `guitar-toolbox-lib` używa starych nazw klas CSS (`.form-row`, `.form-select`, `.section-title`, `.mode-selector`) i hardcodowanych kolorów (`#004400`, `#ccc`, `white`). Nowa strategia architektoniczna wymaga:
+1. BEM naming convention (`.toolbox__*`, `.toolbox__*--*`)
+2. CSS Custom Properties API z neutralnymi fallbackami (`transparent`, `inherit`, `currentColor`)
+3. Zero hardcodowanych kolorów w bibliotece — host app dostarcza wartości przez CSS vars
+4. Layout/geometria pozostaje w bibliotece z realnymi wartościami fallback
+
+## Solution
+1. Zastąpienie `templateUrl`/`styleUrls` w obu komponentach na `template`/`styles` inline (zgodnie z wytycznymi architekta)
+2. Nowy BEM markup w szablonach: `.toolbox__title`, `.toolbox__mode-selector`, `.toolbox__mode-btn`, `.toolbox__mode-btn--active`, `.toolbox__form`, `.toolbox__field`, `.toolbox__label`, `.toolbox__select`, `.toolbox__submit`, `.toolbox__custom-form`, `.toolbox__input`, `.toolbox__hint`
+3. Nowe style SCSS inline z CSS vars: `var(--toolbox-bg, transparent)`, `var(--toolbox-text, inherit)`, `var(--toolbox-border-color, transparent)`, `var(--toolbox-radius, 0)`, `var(--toolbox-gap, 18px)`, `var(--toolbox-accent, currentColor)`, itd.
+4. Usunięcie hardcodowanych `[style.backgroundColor]="'#004400'"` i `[style.color]="'#ffffff'"`
+5. Ewentualna aktualizacja testów, jeśli query CSS się zmieniają
+
+## MVP
+1. Migracja ToolboxFormComponent — template + styles
+2. Migracja CustomPatternComponent — template + styles
+3. Weryfikacja `ng build` bez błędów
+4. Weryfikacja testów
+
+## Done when
+- Oba komponenty używają wyłącznie `.toolbox__*` klas BEM
+- Żaden plik biblioteki nie zawiera hardcodowanych kolorów/border-radius/background
+- Wszystkie wartości wizualne używają `var(--toolbox-*)` z neutralnymi fallbackami
+- Layout i geometria (grid, flex, gap, padding) mają realne wartości fallback
+- `ng build` przechodzi bez błędów
+
+## Status
+OPEN
+
+---
+
 # Zmiana nazwy @Output z onSubmit$ na onSubmit
 
 ## Motivation
