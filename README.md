@@ -22,6 +22,26 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
+## Library Package
+
+This project includes the `guitar-toolbox-lib` Angular library under [`projects/guitar-toolbox-lib/`](projects/guitar-toolbox-lib/).
+
+### Build
+
+Run `ng build guitar-toolbox-lib` to compile the library. Production build artifacts are output to [`dist/guitar-toolbox-lib/`](dist/guitar-toolbox-lib/).
+
+### Running unit tests
+
+Run `ng test guitar-toolbox-lib` to execute the library's unit tests via [Karma](https://karma-runner.github.io).
+
+### Publishing to npm
+
+1. Update the version in [`projects/guitar-toolbox-lib/package.json`](projects/guitar-toolbox-lib/package.json)
+2. Add a changelog entry in [`projects/guitar-toolbox-lib/CHANGELOG.md`](projects/guitar-toolbox-lib/CHANGELOG.md) following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) conventions
+3. Build the library: `ng build guitar-toolbox-lib`
+4. Navigate to the output directory: `cd dist/guitar-toolbox-lib`
+5. Publish: `npm publish`
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
