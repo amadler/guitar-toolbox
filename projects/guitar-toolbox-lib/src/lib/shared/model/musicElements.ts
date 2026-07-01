@@ -1,5 +1,5 @@
 export interface ToolboxSearchQuery {
-  musicElements: string;
+  musicElements: string | number[];
   keys: string;
   type: QueryTypes;
 }

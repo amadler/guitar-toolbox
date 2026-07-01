@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-07-01
+
+### Fixed
+
+- **Type mismatch in `ToolboxSearchQuery.musicElements`**: changed type from `string` to `string | number[]` to support both named patterns and custom interval arrays ([`musicElements.ts`](src/lib/shared/model/musicElements.ts), [`api.service.ts`](src/lib/api.service.ts))
+- **Configurable API URL**: introduced `API_BASE_URL` InjectionToken with default `http://localhost:3000/api`, consumers can now override via provider ([`api-config.token.ts`](src/lib/api-config.token.ts), [`api.service.ts`](src/lib/api.service.ts))
+- **`@Output` naming inconsistency**: renamed `onSubmit$` → `onSubmit` (with method renamed to `submitForm()` to avoid collision) ([`toolbox-form.component.ts`](src/lib/toolbox-form/toolbox-form.component.ts), [`toolbox-form.component.html`](src/lib/toolbox-form/toolbox-form.component.html), [`app.component.html`](src/lib/app.component.html))
+
+### Changed
+
+- **Exported `API_BASE_URL`**: added injection token to public API surface ([`public-api.ts`](src/public-api.ts))
+- **Updated tests**: `api.service.spec.ts` now covers both default and custom `API_BASE_URL` scenarios
+
 ## [1.1.0] - 2026-07-01
 
 ### Fixed

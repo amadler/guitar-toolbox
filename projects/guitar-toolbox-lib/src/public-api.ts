@@ -8,6 +8,7 @@ export * from './lib/custom-pattern/custom-pattern.component';
 
 // Serwisy
 export * from './lib/api.service';
+export { API_BASE_URL } from './lib/api-config.token';
 
 // Modele
 export type { ToolboxSearchQuery, QueryTypes } from './lib/shared/model/musicElements';

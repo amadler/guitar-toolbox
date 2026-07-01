@@ -14,7 +14,7 @@ import { CustomPatternComponent } from '../custom-pattern/custom-pattern.compone
   styleUrls: ['./toolbox-form.component.scss']
 })
 export class ToolboxFormComponent implements OnDestroy {
-  @Output() onSubmit$: EventEmitter<ToolboxSearchQuery> = new EventEmitter<ToolboxSearchQuery>();
+  @Output() onSubmit: EventEmitter<ToolboxSearchQuery> = new EventEmitter<ToolboxSearchQuery>();
   guitarForm: FormGroup;
   private valueChangesSub?: Subscription;
 
@@ -51,7 +51,7 @@ export class ToolboxFormComponent implements OnDestroy {
     });
   }
 
-  onSubmit() {
+  submitForm() {
     if (this.guitarForm.valid) {
       const formValue = this.guitarForm.value;
       const query: ToolboxSearchQuery = {
@@ -59,12 +59,12 @@ export class ToolboxFormComponent implements OnDestroy {
         keys: formValue.key,
         type: this.selectedElementType
       };
-      this.onSubmit$.emit(query);
+      this.onSubmit.emit(query);
     }
   }
 
   onCustomPatternSubmit(query: ToolboxSearchQuery) {
-    this.onSubmit$.emit(query);
+    this.onSubmit.emit(query);
   }
 
   ngOnDestroy(): void {

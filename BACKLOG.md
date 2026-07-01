@@ -21,7 +21,7 @@ Zmienić typ `musicElements` w interfejsie `ToolboxSearchQuery` na `string | num
 - Typ `ToolboxSearchQuery.musicElements` akceptuje `string | number[]`
 
 ## Status
-OPEN
+FIXED
 
 ---
 
@@ -45,7 +45,7 @@ Wprowadzić `InjectionToken<string>` o nazwie `API_BASE_URL` z domyślną warto�
 - Wszystkie testy przechodzą z domyślną i nadpisaną wartością
 
 ## Status
-OPEN
+FIXED
 
 ---
 
@@ -79,7 +79,7 @@ Biblioteka `guitar-toolbox-lib` używa starych nazw klas CSS (`.form-row`, `.for
 - `ng build` przechodzi bez błędów
 
 ## Status
-OPEN
+FIXED
 
 ---
 
@@ -100,6 +100,34 @@ Zmienić nazwę `@Output() onSubmit$` na `@Output() onSubmit` w ToolboxFormCompo
 - W bibliotece nie ma już `onSubmit$` — wszędzie jest `onSubmit`
 - Konsument używa `(onSubmit)` w szablonie
 - Wszystkie testy przechodzą
+
+## Status
+FIXED
+
+---
+
+# Wyrównanie stylów Custom Pattern do spójności z zakładką Standard Patterns
+
+## Motivation
+Custom Pattern component (`.toolbox__custom-form`) ma inny layout niż Standard Patterns (`.toolbox__form`). Standard Patterns używa siatki CSS (`grid-template-columns: 1fr 1fr 1fr auto`), podczas gdy Custom Pattern używa `flex-direction: row` z `padding: 0 25%`. Powoduje to niespójny wygląd między zakładkami.
+
+## Solution
+Dostosować style `.toolbox__custom-form` i jego elementów potomnych w [`custom-pattern.component.scss`](projects/guitar-toolbox-lib/src/lib/custom-pattern/custom-pattern.component.scss) do layoutu używanego w `.toolbox__form`, zachowując przy tym spójne:
+- użycie `var(--toolbox-*)` dla kolorów i border-radius
+- Wyrównanie do siatki/grid (tak samo jak Standard Patterns)
+- Ten sam `gap`, `font-size`, `height` dla select/input/button
+
+## MVP
+1. Zmiana `.toolbox__custom-form` z `flex` na `grid` (lub inny spójny layout)
+2. Wyrównanie wysokości inputów i przycisków do standardów z `.toolbox__form`
+3. Usunięcie `padding: 0 25%` na rzecz `max-width` lub grid alignment
+4. Weryfikacja wizualna: obie zakładki wyglądają spójnie
+
+## Done when
+- `.toolbox__custom-form` i `.toolbox__form` mają spójny layout i odstępy
+- Inputy, selecty i buttony w Custom Pattern mają ten sam rozmiar co w Standard Patterns
+- Wszystkie style używają `var(--toolbox-*)` z neutralnymi fallbackami
+- `ng build` i testy przechodzą
 
 ## Status
 OPEN

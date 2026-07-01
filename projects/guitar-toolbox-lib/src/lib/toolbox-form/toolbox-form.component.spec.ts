@@ -41,7 +41,7 @@ describe('ToolboxFormComponent', () => {
   });
 
   it('should emit the correct value when form is submitted', () => {
-    spyOn(component.onSubmit$, 'emit');
+    spyOn(component.onSubmit, 'emit');
     component.guitarForm.patchValue({
       elementType: 'basic',
       pattern: 'Single note',
@@ -53,7 +53,7 @@ describe('ToolboxFormComponent', () => {
     form.dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
-    expect(component.onSubmit$.emit).toHaveBeenCalledOnceWith({
+    expect(component.onSubmit.emit).toHaveBeenCalledOnceWith({
       musicElements: 'Single note',
       keys: 'A',
       type: 'basic'

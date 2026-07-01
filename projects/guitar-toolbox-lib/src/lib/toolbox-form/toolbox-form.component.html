@@ -17,7 +17,7 @@
 
 <form *ngIf="!showCustomPattern"
       [formGroup]="guitarForm"
-      (ngSubmit)="onSubmit()"
+      (ngSubmit)="submitForm()"
       class="toolbox__form">
   <div class="toolbox__field">
     <label class="toolbox__label" for="elementType">Type:</label>
