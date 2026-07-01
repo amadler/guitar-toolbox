@@ -8,12 +8,14 @@
   display: block;
 }
 
+// ---- Section title ----
 .toolbox__title {
   margin: 0 0 22px;
   font-size: 16px;
   color: var(--toolbox-text, inherit);
 }
 
+// ---- Mode selector (Standard / Custom) ----
 .toolbox__mode-selector {
   display: flex;
   gap: 10px;
@@ -40,6 +42,126 @@
   color: var(--toolbox-accent, currentColor);
 }
 
+// ---- Fret Range card ----
+.range-card {
+  margin-bottom: 26px;
+}
+
+.range-card__title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--toolbox-text, inherit);
+}
+
+.range-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+// ---- Range preset buttons ----
+.range-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 88px;
+  padding: 10px 14px;
+  background: var(--toolbox-bg, transparent);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--toolbox-border-color, transparent);
+  border-radius: var(--toolbox-radius, 0);
+  color: var(--toolbox-text, inherit);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.range-preset:hover {
+  border-color: var(--toolbox-accent, currentColor);
+}
+
+.range-preset--active {
+  border-color: var(--toolbox-accent, currentColor);
+  background: var(--toolbox-accent-bg, transparent);
+  color: var(--toolbox-accent, currentColor);
+}
+
+.range-preset__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.range-preset__label {
+  font-weight: 500;
+}
+
+.range-preset__value {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+// ---- Custom range inputs ----
+.range-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--toolbox-bg, transparent);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--toolbox-border-color, transparent);
+  border-radius: var(--toolbox-radius, 0);
+}
+
+.range-custom__input {
+  width: 56px;
+  height: 36px;
+  padding: 0 8px;
+  background: var(--toolbox-bg, transparent);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--toolbox-border-color, transparent);
+  border-radius: var(--toolbox-radius-sm, 0);
+  color: var(--toolbox-text, inherit);
+  font-size: 14px;
+  text-align: center;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.range-custom__separator {
+  color: var(--toolbox-text, inherit);
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.range-custom__button {
+  height: 36px;
+  padding: 0 14px;
+  background: var(--toolbox-accent, transparent);
+  color: var(--toolbox-accent-text, inherit);
+  border: none;
+  border-radius: var(--toolbox-radius-sm, 0);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.range-custom__button:hover {
+  opacity: 0.9;
+}
+
+// ---- Standard form ----
 .toolbox__form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;

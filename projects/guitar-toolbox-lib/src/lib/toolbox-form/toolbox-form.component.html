@@ -15,6 +15,58 @@
   </button>
 </div>
 
+<!-- range-toolbar -->
+<section class="range-card">
+  <div class="range-card__title">Fret Range</div>
+
+  <div class="range-toolbar">
+    <button
+      *ngFor="let preset of rangePresets"
+      type="button"
+      class="range-preset"
+      [class.range-preset--active]="activePreset === preset.id"
+      (click)="selectPreset(preset.id)">
+      <span class="range-preset__icon">{{ preset.icon }}</span>
+      <span class="range-preset__label">{{ preset.label }}</span>
+      <span class="range-preset__value">{{ preset.start }} – {{ preset.end }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="range-preset"
+      [class.range-preset--active]="activePreset === 'custom'"
+      (click)="activePreset = 'custom'">
+      <span class="range-preset__icon">⚙️</span>
+      <span class="range-preset__label">Custom</span>
+      <span class="range-preset__value">&nbsp;</span>
+    </button>
+
+    <div class="range-custom" *ngIf="activePreset === 'custom'">
+      <input
+        class="form-control range-custom__input"
+        type="number"
+        [(ngModel)]="customStart"
+        [ngModelOptions]="{standalone: true}"
+        min="0"
+        max="24" />
+      <span class="range-custom__separator">–</span>
+      <input
+        class="form-control range-custom__input"
+        type="number"
+        [(ngModel)]="customEnd"
+        [ngModelOptions]="{standalone: true}"
+        min="0"
+        max="24" />
+      <button
+        class="btn btn-success range-custom__button"
+        type="button"
+        (click)="applyCustomRange()">
+        Show
+      </button>
+    </div>
+  </div>
+</section>
+
 <form *ngIf="!showCustomPattern"
       [formGroup]="guitarForm"
       (ngSubmit)="onSubmit()"
