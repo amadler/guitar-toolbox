@@ -131,3 +131,26 @@ Dostosować style `.toolbox__custom-form` i jego elementów potomnych w [`custom
 
 ## Status
 OPEN
+
+---
+
+# Sort scales and chords alphabetically in Toolbox selects
+
+## Motivation
+The `patterns.scale` and `patterns.chord` arrays in [`toolbox-form.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.ts:29-33) appear in the order defined by the `SCALE_PATTERNS` and `CHORD_PATTERNS` constants from `guitar-neck-shared`, which may not be alphabetical. This makes it harder for users to find specific scales or chords in the `<select>` dropdowns — a basic UX expectation.
+
+## Solution
+Append `.sort()` to the `.map()` calls that build the `patterns.scale` and `patterns.chord` arrays. The change is minimal and localized to lines 31–32 of [`toolbox-form.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.ts).
+
+## MVP
+1. Add `.sort()` to `SCALE_PATTERNS.map(scale => scale.name)` on line 31
+2. Add `.sort()` to `CHORD_PATTERNS.map(chord => chord.name)` on line 32
+3. Verify `ng build guitar-toolbox-lib` passes
+
+## Done when
+- Both `patterns.scale` and `patterns.chord` arrays are sorted alphabetically
+- `ng build` for the library project passes without errors
+- Both `<select>` dropdowns display options in alphabetical order
+
+## Status
+OPEN

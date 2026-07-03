@@ -28,8 +28,8 @@ export class ToolboxFormComponent implements OnDestroy {
 
   patterns: { [key: string]: string[] } = {
     basic: ['Single note', 'All notes'],
-    scale: SCALE_PATTERNS.map(scale => scale.name),
-    chord: CHORD_PATTERNS.map(chord => chord.name),
+    scale: SCALE_PATTERNS.map(scale => scale.name).sort(),
+    chord: CHORD_PATTERNS.map(chord => chord.name).sort(),
   };
 
   availablePatterns: string[] = this.patterns['basic'];
