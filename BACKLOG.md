@@ -130,7 +130,7 @@ Dostosować style `.toolbox__custom-form` i jego elementów potomnych w [`custom
 - `ng build` i testy przechodzą
 
 ## Status
-OPEN
+FIXED
 
 ---
 
