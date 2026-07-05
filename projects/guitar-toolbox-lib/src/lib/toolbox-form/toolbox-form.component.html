@@ -1,17 +1,17 @@
-<h2 class="toolbox__title">Select, what you want to see on guitar neck.</h2>
+<h2 class="toolbox__title">Select what you want to see on the guitar neck.</h2>
 
 <div class="toolbox__mode-selector">
   <button type="button"
           class="toolbox__mode-btn"
           [class.toolbox__mode-btn--active]="!showCustomPattern"
           (click)="showCustomPattern = false">
-    Standard Patterns
+    Standard
   </button>
   <button type="button"
           class="toolbox__mode-btn"
           [class.toolbox__mode-btn--active]="showCustomPattern"
           (click)="showCustomPattern = true">
-    Custom Pattern
+    Custom
   </button>
 </div>
 
@@ -40,7 +40,7 @@
     </select>
   </div>
 
-  <button type="submit" class="toolbox__submit">Show!</button>
+  <button type="submit" class="toolbox__submit">Show</button>
 </form>
 
 <lib-custom-pattern

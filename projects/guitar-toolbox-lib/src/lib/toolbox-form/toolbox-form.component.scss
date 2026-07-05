@@ -32,12 +32,31 @@
   color: var(--toolbox-text, inherit);
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+.toolbox__mode-btn:hover {
+  border-color: var(--toolbox-accent, currentColor);
+  opacity: 0.85;
 }
 
 .toolbox__mode-btn--active {
   border-color: var(--toolbox-accent, currentColor);
   background: var(--toolbox-accent-bg, transparent);
   color: var(--toolbox-accent, currentColor);
+  font-weight: 600;
+}
+
+.toolbox__mode-btn--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--toolbox-accent, currentColor);
+  border-radius: 1px;
 }
 
 .toolbox__form {
@@ -83,13 +102,20 @@
   border-radius: var(--toolbox-radius-sm, 0);
   cursor: pointer;
   font-size: 14px;
+  transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
 .toolbox__submit:hover {
-  opacity: 0.9;
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.toolbox__submit:active {
+  transform: translateY(0);
 }
 
 .toolbox__submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
