@@ -19,7 +19,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "guitar-neck-shared": "^1.0.2",
-    "guitar-toolbox-lib": "^1.0.0",
+    "guitar-toolbox-lib": "file:dist/guitar-toolbox-lib",
     "rxjs": "~7.8.0",
     "shared": "^0.2.0",
     "tslib": "^2.3.0",

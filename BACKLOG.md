@@ -154,3 +154,40 @@ Append `.sort()` to the `.map()` calls that build the `patterns.scale` and `patt
 
 ## Status
 OPEN
+
+---
+
+# UI text i style w ToolboxForm — poprawki kopii i stylów przycisków
+
+## Motivation
+ToolboxFormComponent ma przestarzałe teksty interfejsu: tytuł `Select, what you want to see on guitar neck.`, etykieta `Key of:` i przycisk `Show!`. Brakuje też wizualnego rozróżnienia między aktywną a nieaktywną zakładką oraz efektów hover/active na przycisku submit. Te detale wpływają na profesjonalny wygląd komponentu.
+
+## Solution
+1. Zmiana trzech tekstów w szablonie [`toolbox-form.component.html`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.html) (linie 1, 37, 43):
+   - Tytuł: `Select, what you want to see on guitar neck.` → `Show on fretboard`
+   - Etykieta: `Key of:` → `Key`
+   - Przycisk: `Show!` → `Show`
+2. Dodanie `font-weight: 700` do istniejącego selektora `.toolbox__mode-btn--active` w [`toolbox-form.component.scss`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.scss) (linia 37)
+3. Dodanie nowego selektora `.toolbox__mode-btn:not(.toolbox__mode-btn--active)` z delikatnym tłem i obramowaniem dla nieaktywnej zakładki
+4. Przeniesienie istniejącego `.toolbox__submit:hover` do zagnieżdżonego `&:hover` wewnątrz `.toolbox__submit` oraz dodanie `&:active` z `transform: translateY(1px)`
+5. Lokalny build biblioteki (`ng build guitar-toolbox-lib`) i linkowanie w głównym projekcie przez `file:` dependency
+
+## MVP
+1. Edycja trzech linii w [`toolbox-form.component.html`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.html)
+2. Edycja `.toolbox__mode-btn--active` — dodanie `font-weight: 700`
+3. Dodanie selektora `.toolbox__mode-btn:not(.toolbox__mode-btn--active)` w [`toolbox-form.component.scss`](projects/guitar-toolbox-lib/src/lib/toolbox-form/toolbox-form.component.scss)
+4. Refactor `.toolbox__submit:hover` na zagnieżdżony `&:hover` i dodanie `&:active`
+5. `ng build` biblioteki — brak błędów
+6. Linkowanie przez `file:` w głównym projekcie i `npm run build` — brak błędów
+
+## Done when
+- Wszystkie trzy teksty w szablonie są zaktualizowane zgodnie z tabelą
+- `.toolbox__mode-btn--active` ma `font-weight: 700`
+- Nieaktywne przyciski zakładek mają delikatne tło (`var(--app-surface-soft, #f8faf8)`) i obramowanie (`var(--app-border, #dfe4e0)`)
+- `.toolbox__submit:hover` istnieje jako zagnieżdżony selektor z `opacity: 0.9`
+- `.toolbox__submit:active` istnieje z `transform: translateY(1px)`
+- `ng build` biblioteki przechodzi bez błędów
+- Główny projekt builduje się z lokalnym linkiem `file:../guitar-toolbox/dist/guitar-toolbox-lib`
+
+## Status
+OPEN

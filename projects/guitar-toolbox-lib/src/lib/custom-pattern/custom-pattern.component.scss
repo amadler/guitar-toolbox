@@ -1,17 +1,15 @@
 // ===========================================================
 // CustomPatternComponent styles (guitar-toolbox-lib)
 // Library provides: layout, geometry, basic sizing
-// Host app provides: colors, backgrounds, fonts via CSS vars
+// Host app provides: colors, backgrounds, borders, fonts via CSS vars
 // ===========================================================
 
 .toolbox__custom-form {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: var(--toolbox-gap, 20px);
-  width: auto;
-  margin: 0 auto;
-  padding: 0 25%;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--toolbox-gap, 18px);
+  align-items: end;
+  margin-bottom: 26px;
 }
 
 .toolbox__field {
@@ -23,6 +21,7 @@
 .toolbox__label {
   color: var(--toolbox-text, inherit);
   font-size: 14px;
+  margin-bottom: 4px;
 }
 
 .toolbox__hint {
@@ -31,7 +30,9 @@
 }
 
 .toolbox__input {
-  padding: 8px 12px;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
   background: var(--toolbox-bg, transparent);
   border-width: 1px;
   border-style: solid;
@@ -39,6 +40,7 @@
   border-radius: var(--toolbox-radius-sm, 0);
   font-size: 14px;
   color: var(--toolbox-text, inherit);
+  box-sizing: border-box;
 }
 
 .toolbox__input:focus {
@@ -57,16 +59,19 @@
   border-radius: var(--toolbox-radius-sm, 0);
   color: var(--toolbox-text, inherit);
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .toolbox__submit {
-  height: 37px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: var(--toolbox-radius-sm, 0);
+  min-width: 88px;
+  height: 40px;
+  padding: 0 16px;
   background: var(--toolbox-accent, transparent);
   color: var(--toolbox-accent-text, inherit);
+  border: none;
+  border-radius: var(--toolbox-radius-sm, 0);
   cursor: pointer;
+  font-size: 14px;
 }
 
 .toolbox__submit:disabled {
