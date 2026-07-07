@@ -1,10 +1,15 @@
 {
   "name": "guitar-toolbox-lib",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Angular library for guitar toolbox components",
   "author": "Your Name",
   "private": false,
-  "keywords": ["angular", "guitar", "music", "toolbox"],
+  "keywords": [
+    "angular",
+    "guitar",
+    "music",
+    "toolbox"
+  ],
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^18.2.0",
