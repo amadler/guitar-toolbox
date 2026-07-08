@@ -1,47 +1,74 @@
-# GuitarToolbox
+# Guitar Toolbox
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+An **Angular 18** monorepo containing a reusable Angular library (`guitar-toolbox-lib`) and a demo application for querying and displaying musical elements (scales, chords, notes) on a guitar fretboard.
 
-## Development server
+## Project Structure
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```
+guitar-toolbox/
+├── src/                          # Demo application (library consumer)
+│   ├── app/
+│   │   ├── app.component.ts      # Root component consuming lib-toolbox-form
+│   │   ├── app.config.ts         # App bootstrap providers
+│   │   └── app.routes.ts         # App routing
+│   ├── main.ts                   # App entry point
+│   └── styles.scss               # Global styles
+├── projects/
+│   └── guitar-toolbox-lib/       # 📦 Reusable Angular library
+│       ├── src/lib/
+│       │   ├── toolbox-form/     # Main form component (ToolboxFormComponent)
+│       │   ├── custom-pattern/   # Custom interval pattern component (CustomPatternComponent)
+│       │   ├── shared/           # Models & Command pattern classes
+│       │   ├── api.service.ts    # Backend HTTP API wrapper
+│       │   └── api-config.token.ts  # API_BASE_URL InjectionToken
+│       ├── public-api.ts         # Public API surface
+│       ├── README.md             # Library documentation
+│       └── CHANGELOG.md          # Version history
+├── angular.json                  # Angular workspace config
+├── package.json                  # Workspace dependencies
+└── BACKLOG.md                    # Feature/fix backlog
+```
 
-## Code scaffolding
+## Prerequisites
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- [Node.js](https://nodejs.org/) 18+
+- Angular CLI 18.2+ (`npm install -g @angular/cli@^18.2.0`)
 
-## Build
+## Quick Start
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+# 1. Install dependencies
+npm install
 
-## Running unit tests
+# 2. Start the demo app dev server
+npm start
+# → http://localhost:4200
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+# 3. Build the library (when making changes to library code)
+ng build guitar-toolbox-lib
+```
 
-## Running end-to-end tests
+## Development Commands
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start demo app dev server |
+| `npm run build` | Build demo app |
+| `npm test` | Run demo app unit tests |
+| `ng build guitar-toolbox-lib` | Build library |
+| `ng test guitar-toolbox-lib` | Run library unit tests |
+| `ng serve` | Alias for `npm start` |
 
-## Library Package
+## Library Documentation
 
-This project includes the `guitar-toolbox-lib` Angular library under [`projects/guitar-toolbox-lib/`](projects/guitar-toolbox-lib/).
+For detailed library documentation — including installation, API reference, theming with CSS Custom Properties, and API URL configuration — see [projects/guitar-toolbox-lib/README.md](projects/guitar-toolbox-lib/README.md).
 
-### Build
+Additional architecture and design documents:
 
-Run `ng build guitar-toolbox-lib` to compile the library. Production build artifacts are output to [`dist/guitar-toolbox-lib/`](dist/guitar-toolbox-lib/).
+- [Architecture Overview](plans/architecture.md) — component tree, data flow, Command pattern
+- [CSS Custom Properties Theming Guide](plans/css-theming-guide.md) — reference of all `--toolbox-*` theming variables
+- [AGENTS.md](AGENTS.md) — AI agent development guidelines
 
-### Running unit tests
+## License
 
-Run `ng test guitar-toolbox-lib` to execute the library's unit tests via [Karma](https://karma-runner.github.io).
-
-### Publishing to npm
-
-1. Update the version in [`projects/guitar-toolbox-lib/package.json`](projects/guitar-toolbox-lib/package.json)
-2. Add a changelog entry in [`projects/guitar-toolbox-lib/CHANGELOG.md`](projects/guitar-toolbox-lib/CHANGELOG.md) following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) conventions
-3. Build the library: `ng build guitar-toolbox-lib`
-4. Navigate to the output directory: `cd dist/guitar-toolbox-lib`
-5. Publish: `npm publish`
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT

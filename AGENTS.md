@@ -51,12 +51,12 @@ When updating or reviewing `.md` documentation files, derive a validation checkl
 
 ```
 Documentation consistency — checklist template:
-- [ ] Nazwy serwisów (FretboardOrchestrationService, FretboardStateService, itd.) są takie same we wszystkich .md
-- [ ] apiUrl (http://localhost:3000) jest spójny we wszystkich plikach
+- [ ] Klasy Command (DisplayScaleCommand, DisplayChordCommand, itd.) są takie same we wszystkich .md
+- [ ] apiUrl (http://localhost:3000) jako wartość domyślna API_BASE_URL jest spójny we wszystkich plikach
 - [ ] BACKLOG.md statusy są zgodne z resztą dokumentów
-- [ ] Ścieżki do plików (src/app/...) faktycznie istnieją w repozytorium
-- [ ] Endpointy backend API (GET /api/chords/:name/:root) są spójne
-- [ ] AI Chat oznaczony jako POSTPONED wszędzie gdzie występuje
+- [ ] Ścieżki do plików (src/app/..., projects/guitar-toolbox-lib/...) faktycznie istnieją w repozytorium
+- [ ] Endpointy backend API (/api/{type}s/{musicElements}/{keys}) są spójne
+- [ ] ToolboxSearchQuery.type akceptuje 'basic' | 'scale' | 'chord' | 'custom' wszędzie gdzie występuje
 - [ ] Żaden .md nie zawiera starych/nieaktualnych nazw serwisów (np. MusicTheoryFacadeService, ScaleAndTriadService)
 ```
 
