@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { neckConfig } from 'guitar-neck-shared';
-import { ToolboxSearchQuery } from '../shared/model/musicElements';
+import { ToolboxSearchQuery } from '../../shared/model/musicElements';
 
 @Component({
   selector: 'lib-custom-pattern',
@@ -12,7 +12,7 @@ import { ToolboxSearchQuery } from '../shared/model/musicElements';
   styleUrls: ['./custom-pattern.component.scss']
 })
 export class CustomPatternComponent {
-  @Output() onCustomPatternSubmit = new EventEmitter<ToolboxSearchQuery>();
+  @Output() onSubmit = new EventEmitter<ToolboxSearchQuery>();
 
   customPatternForm: FormGroup;
   keys = neckConfig.chromaticNotes;
@@ -24,7 +24,7 @@ export class CustomPatternComponent {
     });
   }
 
-  onSubmit() {
+  submit() {
     if (this.customPatternForm.valid) {
       const formValue = this.customPatternForm.value;
       // Konwertujemy string interwałów na tablicę liczb
@@ -35,7 +35,7 @@ export class CustomPatternComponent {
         musicElements: intervals, // przekazujemy tablicę interwałów
         keys: formValue.rootNote
       };
-      this.onCustomPatternSubmit.emit(query);
+      this.onSubmit.emit(query);
     }
   }
 }

@@ -3,8 +3,8 @@
  */
 
 // Komponenty
-export * from './lib/toolbox-form/toolbox-form.component';
-export * from './lib/custom-pattern/custom-pattern.component';
+export * from './lib/toolbox-forms/scale-or-chord/scale-or-chord.component';
+export * from './lib/toolbox-forms/custom-pattern/custom-pattern.component';
 
 // Serwisy
 export * from './lib/api.service';

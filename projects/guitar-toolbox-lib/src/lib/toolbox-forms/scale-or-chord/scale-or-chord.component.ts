@@ -1,19 +1,18 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { QueryTypes, ToolboxSearchQuery } from '../shared/model/musicElements';
+import { QueryTypes, ToolboxSearchQuery } from '../../shared/model/musicElements';
 import { CHORD_PATTERNS, neckConfig, SCALE_PATTERNS } from 'guitar-neck-shared';
-import { CustomPatternComponent } from '../custom-pattern/custom-pattern.component';
 
 @Component({
-  selector: 'lib-toolbox-form',
+  selector: 'lib-scale-or-chord',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor, NgIf, CustomPatternComponent],
-  templateUrl: './toolbox-form.component.html',
-  styleUrls: ['./toolbox-form.component.scss']
+  imports: [ReactiveFormsModule, NgFor],
+  templateUrl: './scale-or-chord.component.html',
+  styleUrls: ['./scale-or-chord.component.scss']
 })
-export class ToolboxFormComponent implements OnDestroy {
+export class ScaleOrChordComponent implements OnDestroy {
   @Output() onSubmit: EventEmitter<ToolboxSearchQuery> = new EventEmitter<ToolboxSearchQuery>();
   guitarForm: FormGroup;
   private valueChangesSub?: Subscription;
@@ -28,14 +27,12 @@ export class ToolboxFormComponent implements OnDestroy {
 
   patterns: { [key: string]: string[] } = {
     basic: ['Single note', 'All notes'],
-    scale: SCALE_PATTERNS.map(scale => scale.name).sort(),
-    chord: CHORD_PATTERNS.map(chord => chord.name).sort(),
+    scale: SCALE_PATTERNS.map(scale => scale.name),
+    chord: CHORD_PATTERNS.map(chord => chord.name),
   };
 
   availablePatterns: string[] = this.patterns['basic'];
   selectedElementType: QueryTypes = 'basic';
-
-  showCustomPattern = false;
 
   constructor(private fb: FormBuilder) {
     this.guitarForm = this.fb.group({
@@ -51,7 +48,7 @@ export class ToolboxFormComponent implements OnDestroy {
     });
   }
 
-  submitForm() {
+  submit() {
     if (this.guitarForm.valid) {
       const formValue = this.guitarForm.value;
       const query: ToolboxSearchQuery = {
@@ -61,10 +58,6 @@ export class ToolboxFormComponent implements OnDestroy {
       };
       this.onSubmit.emit(query);
     }
-  }
-
-  onCustomPatternSubmit(query: ToolboxSearchQuery) {
-    this.onSubmit.emit(query);
   }
 
   ngOnDestroy(): void {

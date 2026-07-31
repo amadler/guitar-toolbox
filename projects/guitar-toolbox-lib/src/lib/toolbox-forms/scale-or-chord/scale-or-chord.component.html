@@ -1,23 +1,7 @@
-<h2 class="toolbox__title">Select what you want to see on the guitar neck.</h2>
 
-<div class="toolbox__mode-selector">
-  <button type="button"
-          class="toolbox__mode-btn"
-          [class.toolbox__mode-btn--active]="!showCustomPattern"
-          (click)="showCustomPattern = false">
-    Standard
-  </button>
-  <button type="button"
-          class="toolbox__mode-btn"
-          [class.toolbox__mode-btn--active]="showCustomPattern"
-          (click)="showCustomPattern = true">
-    Custom
-  </button>
-</div>
 
-<form *ngIf="!showCustomPattern"
-      [formGroup]="guitarForm"
-      (ngSubmit)="submitForm()"
+<form [formGroup]="guitarForm"
+      (ngSubmit)="submit()"
       class="toolbox__form">
   <div class="toolbox__field">
     <label class="toolbox__label" for="elementType">Type:</label>
@@ -43,7 +27,4 @@
   <button type="submit" class="toolbox__submit">Show</button>
 </form>
 
-<lib-custom-pattern
-  *ngIf="showCustomPattern"
-  (onCustomPatternSubmit)="onCustomPatternSubmit($event)">
-</lib-custom-pattern>
+
