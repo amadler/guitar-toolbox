@@ -11,17 +11,12 @@ export * from './lib/api.service';
 export { API_BASE_URL } from './lib/api-config.token';
 
 // Modele
-export type { ToolboxSearchQuery, QueryTypes } from './lib/shared/model/musicElements';
+export type { ToolboxSearchQuery, QueryTypes, ScaleChordRelation } from './lib/shared/model/musicElements';
 
-// Komendy (UICommands)
-export type { Command, NoteSelector } from './lib/shared/UICommands';
 export {
-  DisplaySingleNoteCommand,
-  DisplayAllNotesCommand,
-  DisplayScaleCommand,
-  DisplayChordCommand,
-  DisplayCustomPatternCommand
-} from './lib/shared/UICommands';
+  ScaleOrChordComponent,
+  ScaleOrChordComponent as ToolboxFormComponent,
+} from './lib/toolbox-forms/scale-or-chord/scale-or-chord.component';
 
-// Klasa narzędziowa GuitarNeck
-export { default as GuitarNeck } from './lib/shared/GuitarNeck';
+export { FormsWrapperComponent } from './lib/toolbox-forms/forms-wrapper.component';
+

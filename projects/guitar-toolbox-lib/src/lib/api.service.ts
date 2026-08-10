@@ -20,6 +20,7 @@ export class ApiService {
     const url = `${this.apiUrl}/${query.type}s/${elements}/${query.keys}`;
     console.log('Requesting URL:', url);
 
+    // TODO: Handle errors in logger
     return this.http.get(url).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {

@@ -19,5 +19,15 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "entrypoints": [
+    {
+      "name": "guitar-toolbox-lib",
+      "main": "./src/public-api.ts",
+      "types": "./src/public-api.ts",
+      "exports": {
+        ".": "./src/public-api.ts"
+      }
+    }
+  ],
   "sideEffects": false
 }

@@ -12,14 +12,14 @@ import { ScaleChordRelation } from '../../shared/model/musicElements';
   templateUrl: './scale-chord-form.component.html',
   styleUrl: './scale-chord-form.component.scss',
 })
-export class ScaleChordFormComponent{
+export class ScaleChordFormComponent {
   /** Emitted when the user clicks Show relationship. */
   @Output() onSubmit = new EventEmitter<ScaleChordRelation>();
 
   guitarForm: FormGroup;
-  constructor( private fb: FormBuilder) {
-    this.guitarForm = this.fb.group({
-      chordName:'major',
+  constructor(private fb: FormBuilder) {
+    this.guitarForm = this.fb.nonNullable.group<ScaleChordRelation>({
+      chordName: 'major',
       chordRoot: 'C',
       scaleName: 'major',
       scaleRoot: 'C'

@@ -3,6 +3,8 @@ export interface ToolboxSearchQuery {
   keys: string;
   type: QueryTypes;
 }
+
+// TODO możliwa nieścisłość z appMode
 export type QueryTypes = 'scale' | 'chord' | 'basic' | 'custom';
 
 
