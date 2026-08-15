@@ -1,0 +1,75 @@
+<pre>{{ toolboxForm.value | json }}</pre>
+<form [formGroup]="toolboxForm" (ngSubmit)="submit()" class="sentence-form">
+  <select formControlName="intent" required>
+    <option value="show">Show</option>
+    <option value="compare">Compare</option>
+  </select>
+
+  <!-- Showing path -->
+  <ng-container *ngIf="toolboxForm.get('intent')?.value === 'show'">
+    <!-- visible when intent === show -->
+    <select formControlName="kindControl" required>
+      <option value="" disabled hidden>Choose</option>
+      <option value="scale">Scale</option>
+      <option value="chord">Chord</option>
+      <option value="intervalPattern">Interval pattern</option>
+    </select>
+
+    <div
+      [ngIf]="toolboxForm.get('kindControl')?.value === 'scale'"
+      formGroupName="showGroup"
+    >
+      <!-- scale path -->
+      <ng-container formGroupName="scaleGroup">
+        <select formControlName="key" required>
+          <option value="" disabled hidden>Key</option>
+          @for (key of musicKeys; track $index) {
+            <option [value]="key">{{ key }}</option>
+          }
+        </select>
+        <select formControlName="scaleType">
+          <option value="" disabled hidden>Scale type</option>
+          @for (scale of scalePatternNames; track $index) {
+            <option [value]="scale">{{ scale }}</option>
+          }
+        </select>
+      </ng-container>
+    </div>
+    <ng-container
+      [ngIf]="toolboxForm.get('kindControl')?.value === 'chord'"
+      formGroupName="showGroup"
+    >
+      <!-- chord path -->
+      <ng-container formGroupName="chordGroup">
+        <select formControlName="key" required>
+          <option value="" disabled hidden>Key</option>
+          @for (key of musicKeys; track $index) {
+            <option [value]="key">{{ key }}</option>
+          }
+        </select>
+        <select formControlName="chordType" required>
+          <option value="" disabled hidden>Chord type</option>
+          @for (chord of chordPatternNames; track $index) {
+            <option [value]="chord">{{ chord }}</option>
+          }
+        </select>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'intervalPattern'">
+      intervalPattern path
+    </ng-container>
+  </ng-container>
+
+  <span
+    formGroupName="compareGroup"
+    *ngIf="toolboxForm.get('intent')?.value === 'compare'"
+  >
+    compare fn
+  </span>
+  <br />
+  <button type="submit">Submit</button>
+</form>
+<br />
+<br />
+<br />

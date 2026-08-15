@@ -1,5 +1,10 @@
 <h2 class="toolbox__title">Select what you want to see on the guitar neck.</h2>
 
+<div>
+  <app-toolbox-builder
+    (toolboxEvent)="onToolboxEmit($event)"
+  ></app-toolbox-builder>
+</div>
 <div class="toolbox__mode-selector">
   <button
     type="button"

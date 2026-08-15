@@ -1,0 +1,33 @@
+.sentence-form {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+
+  select,
+  input,
+  button {
+    border: none;
+    outline: none;
+    // field-sizing: content;
+  }
+
+  button {
+    background: none;
+    font-weight: bold;
+  }
+  button[type="submit"] {
+    color: var(--toolbox-accent);
+  }
+
+  button[type="reset"] {
+    color: var(--toolbox-warn);
+  }
+  button[type="disabled"] {
+    color: var(--toolbox-muted);
+  }
+}
+
+form.sentence-form > * {
+  flex-grow: 1;
+}
