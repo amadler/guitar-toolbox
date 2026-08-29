@@ -5,8 +5,6 @@
 - [Monorepo Layout](#monorepo-layout)
 - [Component Tree](#component-tree)
 - [Data Flow](#data-flow)
-- [Command Pattern](#command-pattern)
-- [API Integration](#api-integration)
 - [Theming Strategy](#theming-strategy)
 
 ---
@@ -25,11 +23,10 @@ guitar-toolbox/                     ← Angular workspace root
 ├── projects/
 │   └── guitar-toolbox-lib/         ← Reusable Angular library
 │       ├── src/lib/
-│       │   ├── toolbox-form/       ← ToolboxFormComponent
-│       │   ├── custom-pattern/     ← CustomPatternComponent
-│       │   ├── shared/             ← UICommands.ts, GuitarNeck.ts, model/
-│       │   ├── api.service.ts      ← HTTP wrapper for backend
-│       │   └── api-config.token.ts ← API_BASE_URL InjectionToken
+│       │   ├── toolbox-forms/       ← FormsWrapperComponent, ScaleOrChordComponent, CustomPatternComponent, ToolboxBuilderComponent
+│       │   ├── shared/             ← interval-utils.ts, model/
+│       │   ├── api.service.ts      ← HTTP wrapper (DEPRECATED — no backend)
+│       │   └── api-config.token.ts ← API_BASE_URL InjectionToken (DEPRECATED)
 │       ├── public-api.ts           ← Public API surface (barrel)
 │       └── package.json            ← npm package metadata
 ├── angular.json                    ← Workspace config
@@ -44,123 +41,80 @@ guitar-toolbox/                     ← Angular workspace root
 
 ```
 AppComponent (demo app)
-└── lib-toolbox-form [ToolboxFormComponent]
-    ├── (Standard mode form)
-    │   ├── Type selector (Basic | Scale | Chord)
-    │   ├── Pattern selector (dynamic based on type)
-    │   ├── Key selector (C, C#, D, ...)
-    │   └── Submit button
-    └── (Custom mode form)
-        └── lib-custom-pattern [CustomPatternComponent]
+└── lib-forms-wrapper [FormsWrapperComponent]
+    └── lib-toolbox-builder [ToolboxBuilderComponent]
+        ├── (Show mode — scale-or-chord)
+        │   ├── Type selector (Scale | Chord)
+        │   ├── Pattern selector (dynamic based on type)
+        │   ├── Key selector (C, C#, D, ...)
+        │   └── Submit button
+        ├── (Compare mode — scale-chord)
+        │   ├── Scale: type + key selectors
+        │   ├── Chord: type + key selectors
+        │   └── Submit button
+        └── (Build mode — custom pattern)
             ├── Intervals input (comma-separated numbers)
             ├── Root note selector
             └── Submit button
 ```
 
-The two modes are mutually exclusive — toggled by the **Standard** / **Custom** tab buttons.
+The three modes are mutually exclusive — toggled by tab buttons in `ToolboxBuilderComponent`.
 
 ---
 
 ## Data Flow
 
-### Standard Mode
+### Communication with Host App
+
+The library communicates with the host app (GNUI) through a single `@Output()` event:
+
+```typescript
+// FormsWrapperComponent
+@Output() toolboxEv: EventEmitter<FretboardCommand> = new EventEmitter<FretboardCommand>();
+```
+
+### FretboardCommand types
+
+```typescript
+type FretboardCommand =
+  | { kind: 'scale'; key: string; scaleType: string }
+  | { kind: 'chord'; key: string; chordType: string }
+  | { kind: 'intervalPattern'; key: string; intervals: number[] }
+  | { kind: 'scaleChordRelation'; scaleKey: string; scaleType: string; chordKey: string; chordType: string };
+```
+
+### Show Mode (scale-or-chord)
 
 ```
 User selects Type → valueChanges triggers availablePatterns update
 User selects Pattern + Key
 User clicks "Show" → submitForm()
-
-submitForm():
-  └─ builds ToolboxSearchQuery {
-       musicElements: string (pattern name),
-       keys: string (root note),
-       type: QueryTypes ('basic' | 'scale' | 'chord')
-     }
-  └─ emits via @Output() onSubmit
+  └─ emits FretboardCommand { kind: 'scale'|'chord', key, scaleType|chordType }
 ```
 
-### Custom Mode
+### Compare Mode (scale-chord)
+
+```
+User selects Scale (type + key) + Chord (type + key)
+User clicks button → emits FretboardCommand { kind: 'scaleChordRelation', scaleKey, scaleType, chordKey, chordType }
+```
+
+### Build Mode (custom pattern)
 
 ```
 User enters intervals (e.g. "1,3,5")
 User selects root note
-User clicks "Show Pattern" → CustomPatternComponent.onSubmit()
-
-onSubmit():
-  └─ parses interval string → number[] (e.g. [1, 3, 5])
-  └─ builds ToolboxSearchQuery {
-       musicElements: number[] (intervals),
-       keys: string (root note),
-       type: 'custom'
-     }
-  └─ emits via @Output() onCustomPatternSubmit
-     └─ ToolboxFormComponent.onCustomPatternSubmit() re-emits via @Output() onSubmit
+User clicks button → intervalsToNoteNames() converts to note names
+  └─ emits FretboardCommand { kind: 'intervalPattern', key, intervals }
 ```
 
 ### Consumer Integration
 
-The host app binds to `(onSubmit)` and can:
+The host app binds to `(toolboxEv)` and dispatches to its services:
 
-1. **Send the query to a backend** via [`ApiService.sendToolboxRequest()`](../projects/guitar-toolbox-lib/src/lib/api.service.ts:16)
-2. **Use the Command pattern** to execute display logic directly
-3. **Both** — send to API and render from the response
-
+```html
+<lib-forms-wrapper (toolboxEv)="onToolboxEvent($event)"></lib-forms-wrapper>
 ```
-Host App
-  ├─ (onSubmit)="handleQuery($event)"
-  │
-  ├─ Option A: ApiService.sendToolboxRequest(query)
-  │   └─ GET {API_BASE_URL}/{type}s/{musicElements}/{keys}
-  │
-  └─ Option B: Command.execute()
-      └─ NoteSelector.scale/chord/note method
-```
-
----
-
-## Command Pattern
-
-The library implements the **GoF Command pattern** to provide a clean, testable way for host apps to execute fretboard display logic.
-
-### Participants
-
-| Role | Implementation |
-|------|---------------|
-| **Command** | [`Command` interface](../projects/guitar-toolbox-lib/src/lib/shared/UICommands.ts:13) — `{ execute(): void }` |
-| **Concrete Commands** | `DisplaySingleNoteCommand`, `DisplayAllNotesCommand`, `DisplayScaleCommand`, `DisplayChordCommand`, `DisplayCustomPatternCommand` |
-| **Receiver** | [`NoteSelector` interface](../projects/guitar-toolbox-lib/src/lib/shared/UICommands.ts:5) — implemented by the host app |
-| **Invoker** | Consumer code (host app) that creates and executes commands |
-
-### Benefits
-
-- **Decoupling** — The library doesn't know how the host renders notes on the fretboard
-- **Testability** — Commands can be unit-tested with mock `NoteSelector` implementations
-- **Extensibility** — New commands can be added without changing existing code
-
----
-
-## API Integration
-
-### ApiService
-
-[`ApiService`](../projects/guitar-toolbox-lib/src/lib/api.service.ts) is an HTTP wrapper that:
-
-1. Converts `musicElements` to a string (joins arrays with `,`)
-2. Builds a URL: `{baseURL}/{type}s/{elements}/{keys}`
-3. Makes a GET request via `HttpClient`
-
-**Examples:**
-
-| Query | Generated URL |
-|-------|--------------|
-| `{ type: 'scale', musicElements: 'Major', keys: 'C' }` | `/api/scales/Major/C` |
-| `{ type: 'chord', musicElements: 'maj', keys: 'G' }` | `/api/chords/maj/G` |
-| `{ type: 'custom', musicElements: [1,3,5], keys: 'D' }` | `/api/customs/1,3,5/D` |
-| `{ type: 'basic', musicElements: 'All notes', keys: 'C' }` | `/api/basics/All notes/C` |
-
-### API_BASE_URL Configuration
-
-The base URL defaults to `http://localhost:3000/api` and is configurable via the [`API_BASE_URL`](../projects/guitar-toolbox-lib/src/lib/api-config.token.ts:17) InjectionToken. See [library README](../projects/guitar-toolbox-lib/README.md#configuring-the-api-url) for usage.
 
 ---
 
@@ -175,7 +129,18 @@ The base URL defaults to `http://localhost:3000/api` and is configurable via the
 
 ### Available CSS Custom Properties
 
-See the [CSS Theming Guide](css-theming-guide.md) for a complete reference.
+| Variable | Fallback | Category |
+|----------|----------|----------|
+| `--toolbox-bg` | `transparent` | Host — kolor tła |
+| `--toolbox-text` | `inherit` | Host — kolor tekstu |
+| `--toolbox-border-color` | `transparent` | Host — kolor obramowania |
+| `--toolbox-radius` | `0` | Host — border radius |
+| `--toolbox-radius-sm` | `0` | Host — border radius (mały) |
+| `--toolbox-gap` | `18px` | Library — odstępy layout |
+| `--toolbox-accent` | `currentColor` | Host — kolor akcentu |
+| `--toolbox-accent-text` | `inherit` | Host — tekst na akcencie |
+| `--toolbox-accent-bg` | `transparent` | Host — tło akcentu |
+| `--toolbox-muted` | `inherit` | Host — kolor muted |
 
 ### BEM Convention
 
@@ -186,3 +151,26 @@ All component styles use BEM naming:
 - Modifier: `.toolbox__mode-btn--active`
 
 This ensures no style conflicts with host app CSS.
+
+---
+
+## DEPRECATED: API Integration
+
+> **Note**: The `ApiService` and `API_BASE_URL` InjectionToken are **deprecated**. The host app (GNUI) no longer uses a backend API — all music theory calculations are done locally via Tonal.js. These services remain in the library for backward compatibility but are not used by the current consumer.
+
+### ApiService
+
+[`ApiService`](projects/guitar-toolbox-lib/src/lib/api.service.ts) is an HTTP wrapper that:
+1. Converts `musicElements` to a string (joins arrays with `,`)
+2. Builds a URL: `{baseURL}/{type}s/{elements}/{keys}`
+3. Makes a GET request via `HttpClient`
+
+### API_BASE_URL Configuration
+
+The base URL defaults to `http://localhost:3000/api` and is configurable via the [`API_BASE_URL`](projects/guitar-toolbox-lib/src/lib/api-config.token.ts) InjectionToken.
+
+---
+
+## DEPRECATED: Command Pattern
+
+> **Note**: The `UICommands.ts` and `GuitarNeck.ts` files have been **removed** from the library. The host app no longer uses the Command pattern — it communicates directly via `FretboardCommand` events. These files existed in earlier versions for backward compatibility.

@@ -190,4 +190,38 @@ ToolboxFormComponent ma przestarzałe teksty interfejsu: tytuł `Select, what yo
 - Główny projekt builduje się z lokalnym linkiem `file:../guitar-toolbox/dist/guitar-toolbox-lib`
 
 ## Status
+
+OPEN
+
+---
+
+# Dead code cleanup — remove deprecated API services and unused files
+
+## Motivation
+
+The library still contains `ApiService`, `API_BASE_URL` InjectionToken, `UICommands.ts`, and `GuitarNeck.ts` — all of which are deprecated since the host app (GNUI) no longer uses a backend API or the Command pattern. These files add maintenance burden and confuse new developers.
+
+## Solution
+
+1. Remove `ApiService` and `api-config.token.ts` (deprecated — no backend)
+2. Remove `UICommands.ts` and `GuitarNeck.ts` from shared/ (deprecated — replaced by FretboardCommand)
+3. Remove `UICommands.spec.ts` (tests for removed code)
+4. Update `public-api.ts` to remove exports for deleted files
+5. Update `architecture.md` to reflect current state
+
+## MVP
+
+1. Delete the 5 files listed above
+2. Verify `ng build guitar-toolbox-lib` passes
+3. Verify GNUI `npm run build` passes with the cleaned library
+
+## Done when
+
+- `ApiService`, `api-config.token.ts`, `UICommands.ts`, `GuitarNeck.ts`, `UICommands.spec.ts` are removed
+- `public-api.ts` no longer exports deleted symbols
+- `ng build guitar-toolbox-lib` succeeds
+- GNUI `npm run build` succeeds with `file:` link to cleaned library
+
+## Status
+
 OPEN

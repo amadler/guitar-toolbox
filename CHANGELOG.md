@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Root-level CHANGELOG.md tracking the full monorepo release history
+- `FormsWrapperComponent` — new wrapper component with `@Output() toolboxEv: EventEmitter<FretboardCommand>` ([`forms-wrapper.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-forms/forms-wrapper.component.ts))
+- `ToolboxBuilderComponent` — three-mode form (Show/Compare/Build) with tab switching ([`toolbox.builder.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-forms/toolbox-forms/toolbox.builder/toolbox.builder.component.ts))
+- `ScaleOrChordComponent` — form for single scale/chord selection ([`scale-or-chord.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-forms/scale-or-chord/scale-or-chord.component.ts))
+- `ScaleChordFormComponent` — form for scale+chord relation comparison ([`scale-chord-form.component.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-forms/scale-chord-form/scale-chord-form.component.ts))
+- `FretboardCommand` type — discriminated union for toolbox → host communication ([`model.ts`](projects/guitar-toolbox-lib/src/lib/toolbox-forms/toolbox-forms/toolbox.builder/model.ts))
+- `intervalsToNoteNames()` helper — converts interval array to note names ([`interval-utils.ts`](projects/guitar-toolbox-lib/src/lib/shared/interval-utils.ts))
+
+### Changed
+- Public API surface: replaced `ToolboxFormComponent` export with `FormsWrapperComponent` + `ScaleOrChordComponent` ([`public-api.ts`](projects/guitar-toolbox-lib/src/public-api.ts))
+- Component selectors: `lib-toolbox-form` → `lib-forms-wrapper`, `lib-custom-pattern` → `lib-toolbox-builder`
+- Communication model: `ToolboxSearchQuery` → `FretboardCommand` (discriminated union)
+- Architecture: removed Command Pattern dependency — host app receives events directly
 
 ## [1.2.0] — 2026-07-01
 
