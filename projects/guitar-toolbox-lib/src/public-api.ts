@@ -23,3 +23,7 @@ export { FormsWrapperComponent } from './lib/toolbox-forms/forms-wrapper.compone
 
 
 export type { FretboardCommand } from './lib/toolbox-forms/toolbox-forms/toolbox.builder/model';
+
+// Interval utilities
+export { intervalsToNoteNames, PREDEFINED_PATTERNS } from './lib/shared/interval-utils';
+export type { PredefinedPattern } from './lib/shared/interval-utils';

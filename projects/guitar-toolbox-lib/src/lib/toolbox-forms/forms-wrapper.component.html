@@ -1,50 +1,5 @@
-<h2 class="toolbox__title">Select what you want to see on the guitar neck.</h2>
-
 <div>
   <app-toolbox-builder
     (toolboxEvent)="onToolboxEmit($event)"
   ></app-toolbox-builder>
 </div>
-<div class="toolbox__mode-selector">
-  <button
-    type="button"
-    class="toolbox__mode-btn"
-    [class.toolbox__mode-btn--active]="activeMode === 'scale-or-chord'"
-    (click)="changeActiveMode('scale-or-chord')"
-  >
-    Scale/Triad
-  </button>
-  <button
-    type="button"
-    class="toolbox__mode-btn"
-    [class.toolbox__mode-btn--active]="activeMode === 'custom-pattern'"
-    (click)="changeActiveMode('custom-pattern')"
-  >
-    Custom&nabla;pattern
-  </button>
-  <button
-    type="button"
-    class="toolbox__mode-btn"
-    [class.toolbox__mode-btn--active]="activeMode === 'scale-chord'"
-    (click)="changeActiveMode('scale-chord')"
-  >
-    Scale-Chord&nbsp;Relation
-  </button>
-</div>
-
-<lib-scale-or-chord
-  *ngIf="activeMode === 'scale-or-chord'"
-  (onSubmit)="onSubmit($event)"
->
-</lib-scale-or-chord>
-<lib-custom-pattern
-  *ngIf="activeMode === 'custom-pattern'"
-  (onSubmit)="onSubmit($event)"
->
-</lib-custom-pattern>
-
-<lib-scale-chord-form
-  *ngIf="activeMode === 'scale-chord'"
-  (onSubmit)="onSubmit($event)"
->
-</lib-scale-chord-form>
