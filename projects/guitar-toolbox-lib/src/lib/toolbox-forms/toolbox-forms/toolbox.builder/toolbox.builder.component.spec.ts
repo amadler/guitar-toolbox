@@ -10,7 +10,7 @@ describe('ToolboxBuilderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ToolboxBuilderComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ToolboxBuilderComponent);
     component = fixture.componentInstance;

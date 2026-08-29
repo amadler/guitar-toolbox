@@ -7,18 +7,18 @@
       class="sentence-toolbox__chip sentence-toolbox__chip--select"
       (click)="toggleDropdown('intent')"
     >
-      {{ intent() === 'show' ? 'Show' : 'Compare' }}
+      {{ intent() === "show" ? "Show" : "Compare" }}
       <span class="sentence-toolbox__arrow">▼</span>
     </button>
-    @if (openDropdown() === 'intent') {
+    @if (openDropdown() === "intent") {
       <div class="sentence-toolbox__dropdown">
-        @for (opt of ['show', 'compare']; track opt) {
+        @for (opt of ["show", "compare"]; track opt) {
           <button
             class="sentence-toolbox__option"
             [class.sentence-toolbox__option--selected]="intent() === opt"
             (click)="setIntent(opt)"
           >
-            {{ opt === 'show' ? 'Show' : 'Compare' }}
+            {{ opt === "show" ? "Show" : "Compare" }}
           </button>
         }
       </div>
@@ -26,17 +26,17 @@
   </div>
 
   <!-- Show sentence -->
-  @if (intent() === 'show') {
+  @if (intent() === "show") {
     <!-- Show kind chip -->
     <div class="sentence-toolbox__chip-wrapper">
       <button
         class="sentence-toolbox__chip sentence-toolbox__chip--select"
         (click)="toggleDropdown('showKind')"
       >
-        {{ showKind() === 'intervalPattern' ? 'interval pattern' : showKind() }}
+        {{ showKind() === "intervalPattern" ? "interval pattern" : showKind() }}
         <span class="sentence-toolbox__arrow">▼</span>
       </button>
-      @if (openDropdown() === 'showKind') {
+      @if (openDropdown() === "showKind") {
         <div class="sentence-toolbox__dropdown">
           <input
             class="sentence-toolbox__filter"
@@ -46,13 +46,13 @@
             (keydown)="$event.stopPropagation()"
             autofocus
           />
-          @for (kind of ['scale', 'chord', 'intervalPattern']; track kind) {
+          @for (kind of ["scale", "chord", "intervalPattern"]; track kind) {
             <button
               class="sentence-toolbox__option"
               [class.sentence-toolbox__option--selected]="showKind() === kind"
               (click)="setShowKind(kind)"
             >
-              {{ kind === 'intervalPattern' ? 'interval pattern' : kind }}
+              {{ kind === "intervalPattern" ? "interval pattern" : kind }}
             </button>
           }
         </div>
@@ -60,7 +60,7 @@
     </div>
 
     <!-- Scale path -->
-    @if (showKind() === 'scale') {
+    @if (showKind() === "scale") {
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
@@ -69,7 +69,7 @@
           {{ selectedKey() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'key') {
+        @if (openDropdown() === "key") {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -82,7 +82,9 @@
             @for (key of filteredKeys(); track key) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                [class.sentence-toolbox__option--selected]="
+                  selectedKey() === key
+                "
                 (click)="selectKey(key)"
               >
                 {{ key }}
@@ -100,7 +102,7 @@
           {{ selectedScaleType() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'scaleType') {
+        @if (openDropdown() === "scaleType") {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -113,7 +115,9 @@
             @for (scale of filteredScaleTypes(); track scale) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedScaleType() === scale"
+                [class.sentence-toolbox__option--selected]="
+                  selectedScaleType() === scale
+                "
                 (click)="selectScaleType(scale)"
               >
                 {{ scale }}
@@ -127,7 +131,7 @@
     }
 
     <!-- Chord path -->
-    @if (showKind() === 'chord') {
+    @if (showKind() === "chord") {
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
@@ -136,7 +140,7 @@
           {{ selectedKey() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'key') {
+        @if (openDropdown() === "key") {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -149,7 +153,9 @@
             @for (key of filteredKeys(); track key) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                [class.sentence-toolbox__option--selected]="
+                  selectedKey() === key
+                "
                 (click)="selectKey(key)"
               >
                 {{ key }}
@@ -167,7 +173,7 @@
           {{ selectedChordType() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'chordType') {
+        @if (openDropdown() === "chordType") {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -180,7 +186,9 @@
             @for (chord of filteredChordTypes(); track chord) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedChordType() === chord"
+                [class.sentence-toolbox__option--selected]="
+                  selectedChordType() === chord
+                "
                 (click)="selectChordType(chord)"
               >
                 {{ chord }}
@@ -194,7 +202,7 @@
     }
 
     <!-- Interval pattern path -->
-    @if (showKind() === 'intervalPattern') {
+    @if (showKind() === "intervalPattern") {
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
@@ -203,8 +211,10 @@
           {{ selectedPattern().label }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'pattern') {
-          <div class="sentence-toolbox__dropdown sentence-toolbox__dropdown--wide">
+        @if (openDropdown() === "pattern") {
+          <div
+            class="sentence-toolbox__dropdown sentence-toolbox__dropdown--wide"
+          >
             <input
               class="sentence-toolbox__filter"
               type="text"
@@ -216,11 +226,17 @@
             @for (pattern of filteredPatterns(); track pattern.label) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedPattern().label === pattern.label"
+                [class.sentence-toolbox__option--selected]="
+                  selectedPattern().label === pattern.label
+                "
                 (click)="selectPattern(pattern)"
               >
-                <span class="sentence-toolbox__option-label">{{ pattern.label }}</span>
-                <span class="sentence-toolbox__option-intervals">[{{ pattern.intervals.join(', ') }}]</span>
+                <span class="sentence-toolbox__option-label">{{
+                  pattern.label
+                }}</span>
+                <span class="sentence-toolbox__option-intervals"
+                  >[{{ pattern.intervals.join(", ") }}]</span
+                >
               </button>
             }
           </div>
@@ -237,7 +253,7 @@
           {{ selectedKey() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'key') {
+        @if (openDropdown() === "key") {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -250,7 +266,9 @@
             @for (key of filteredKeys(); track key) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                [class.sentence-toolbox__option--selected]="
+                  selectedKey() === key
+                "
                 (click)="selectKey(key)"
               >
                 {{ key }}
@@ -265,7 +283,7 @@
   }
 
   <!-- Compare sentence -->
-  @if (intent() === 'compare') {
+  @if (intent() === "compare") {
     <span class="sentence-toolbox__text">scale</span>
 
     <div class="sentence-toolbox__chip-wrapper">
@@ -276,7 +294,7 @@
         {{ compareScaleKey() }}
         <span class="sentence-toolbox__arrow">▼</span>
       </button>
-      @if (openDropdown() === 'compareScaleKey') {
+      @if (openDropdown() === "compareScaleKey") {
         <div class="sentence-toolbox__dropdown">
           <input
             class="sentence-toolbox__filter"
@@ -289,7 +307,9 @@
           @for (key of filteredKeys(); track key) {
             <button
               class="sentence-toolbox__option"
-              [class.sentence-toolbox__option--selected]="compareScaleKey() === key"
+              [class.sentence-toolbox__option--selected]="
+                compareScaleKey() === key
+              "
               (click)="selectCompareScaleKey(key)"
             >
               {{ key }}
@@ -307,7 +327,7 @@
         {{ compareScaleType() }}
         <span class="sentence-toolbox__arrow">▼</span>
       </button>
-      @if (openDropdown() === 'compareScaleType') {
+      @if (openDropdown() === "compareScaleType") {
         <div class="sentence-toolbox__dropdown">
           <input
             class="sentence-toolbox__filter"
@@ -320,7 +340,9 @@
           @for (scale of filteredScaleTypes(); track scale) {
             <button
               class="sentence-toolbox__option"
-              [class.sentence-toolbox__option--selected]="compareScaleType() === scale"
+              [class.sentence-toolbox__option--selected]="
+                compareScaleType() === scale
+              "
               (click)="selectCompareScaleType(scale)"
             >
               {{ scale }}
@@ -340,7 +362,7 @@
         {{ compareChordKey() }}
         <span class="sentence-toolbox__arrow">▼</span>
       </button>
-      @if (openDropdown() === 'compareChordKey') {
+      @if (openDropdown() === "compareChordKey") {
         <div class="sentence-toolbox__dropdown">
           <input
             class="sentence-toolbox__filter"
@@ -353,7 +375,9 @@
           @for (key of filteredKeys(); track key) {
             <button
               class="sentence-toolbox__option"
-              [class.sentence-toolbox__option--selected]="compareChordKey() === key"
+              [class.sentence-toolbox__option--selected]="
+                compareChordKey() === key
+              "
               (click)="selectCompareChordKey(key)"
             >
               {{ key }}
@@ -371,7 +395,7 @@
         {{ compareChordType() }}
         <span class="sentence-toolbox__arrow">▼</span>
       </button>
-      @if (openDropdown() === 'compareChordType') {
+      @if (openDropdown() === "compareChordType") {
         <div class="sentence-toolbox__dropdown">
           <input
             class="sentence-toolbox__filter"
@@ -384,7 +408,9 @@
           @for (chord of filteredChordTypes(); track chord) {
             <button
               class="sentence-toolbox__option"
-              [class.sentence-toolbox__option--selected]="compareChordType() === chord"
+              [class.sentence-toolbox__option--selected]="
+                compareChordType() === chord
+              "
               (click)="selectCompareChordType(chord)"
             >
               {{ chord }}
@@ -396,10 +422,5 @@
   }
 
   <!-- Submit button -->
-  <button
-    class="sentence-toolbox__submit"
-    (click)="submit()"
-  >
-    Show
-  </button>
+  <button class="sentence-toolbox__submit" (click)="submit()">Show</button>
 </div>
