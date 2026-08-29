@@ -123,6 +123,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/guitar-toolbox-lib/tsconfig.spec.json",
+            "main": "projects/guitar-toolbox-lib/src/test.ts",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

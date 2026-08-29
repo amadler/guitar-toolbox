@@ -1,280 +1,75 @@
 <div class="sentence-toolbox">
-  <!-- Intent selector: Show / Compare -->
-  <div class="sentence-toolbox__intent">
-    <span class="sentence-toolbox__label">I want to:</span>
+  <span class="sentence-toolbox__label">I want to:</span>
+
+  <!-- Intent chip: Show / Compare -->
+  <div class="sentence-toolbox__chip-wrapper">
     <button
-      class="sentence-toolbox__chip"
-      [class.sentence-toolbox__chip--active]="intent() === 'show'"
-      (click)="setIntent('show')"
+      class="sentence-toolbox__chip sentence-toolbox__chip--select"
+      (click)="toggleDropdown('intent')"
     >
-      Show
+      {{ intent() === 'show' ? 'Show' : 'Compare' }}
+      <span class="sentence-toolbox__arrow">▼</span>
     </button>
-    <button
-      class="sentence-toolbox__chip"
-      [class.sentence-toolbox__chip--active]="intent() === 'compare'"
-      (click)="setIntent('compare')"
-    >
-      Compare
-    </button>
+    @if (openDropdown() === 'intent') {
+      <div class="sentence-toolbox__dropdown">
+        @for (opt of ['show', 'compare']; track opt) {
+          <button
+            class="sentence-toolbox__option"
+            [class.sentence-toolbox__option--selected]="intent() === opt"
+            (click)="setIntent(opt)"
+          >
+            {{ opt === 'show' ? 'Show' : 'Compare' }}
+          </button>
+        }
+      </div>
+    }
   </div>
 
   <!-- Show sentence -->
   @if (intent() === 'show') {
-    <div class="sentence-toolbox__sentence">
-      <span class="sentence-toolbox__text">Show</span>
-
-      <!-- Show kind chip -->
-      <div class="sentence-toolbox__chip-wrapper">
-        <button
-          class="sentence-toolbox__chip sentence-toolbox__chip--select"
-          (click)="toggleDropdown('showKind')"
-        >
-          {{ showKind() === 'intervalPattern' ? 'interval pattern' : showKind() }}
-          <span class="sentence-toolbox__arrow">▼</span>
-        </button>
-        @if (openDropdown() === 'showKind') {
-          <div class="sentence-toolbox__dropdown">
-            <input
-              class="sentence-toolbox__filter"
-              type="text"
-              placeholder="filter..."
-              (input)="onFilterInput($event)"
-              (keydown)="$event.stopPropagation()"
-              autofocus
-            />
-            @for (kind of ['scale', 'chord', 'intervalPattern']; track kind) {
-              <button
-                class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="showKind() === kind"
-                (click)="setShowKind(kind)"
-              >
-                {{ kind === 'intervalPattern' ? 'interval pattern' : kind }}
-              </button>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Scale path -->
-      @if (showKind() === 'scale') {
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('key')"
-          >
-            {{ selectedKey() }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'key') {
-            <div class="sentence-toolbox__dropdown">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (key of filteredKeys(); track key) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedKey() === key"
-                  (click)="selectKey(key)"
-                >
-                  {{ key }}
-                </button>
-              }
-            </div>
+    <!-- Show kind chip -->
+    <div class="sentence-toolbox__chip-wrapper">
+      <button
+        class="sentence-toolbox__chip sentence-toolbox__chip--select"
+        (click)="toggleDropdown('showKind')"
+      >
+        {{ showKind() === 'intervalPattern' ? 'interval pattern' : showKind() }}
+        <span class="sentence-toolbox__arrow">▼</span>
+      </button>
+      @if (openDropdown() === 'showKind') {
+        <div class="sentence-toolbox__dropdown">
+          <input
+            class="sentence-toolbox__filter"
+            type="text"
+            placeholder="filter..."
+            (input)="onFilterInput($event)"
+            (keydown)="$event.stopPropagation()"
+            autofocus
+          />
+          @for (kind of ['scale', 'chord', 'intervalPattern']; track kind) {
+            <button
+              class="sentence-toolbox__option"
+              [class.sentence-toolbox__option--selected]="showKind() === kind"
+              (click)="setShowKind(kind)"
+            >
+              {{ kind === 'intervalPattern' ? 'interval pattern' : kind }}
+            </button>
           }
         </div>
-
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('scaleType')"
-          >
-            {{ selectedScaleType() }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'scaleType') {
-            <div class="sentence-toolbox__dropdown">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (scale of filteredScaleTypes(); track scale) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedScaleType() === scale"
-                  (click)="selectScaleType(scale)"
-                >
-                  {{ scale }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <span class="sentence-toolbox__text">on fretboard</span>
-      }
-
-      <!-- Chord path -->
-      @if (showKind() === 'chord') {
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('key')"
-          >
-            {{ selectedKey() }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'key') {
-            <div class="sentence-toolbox__dropdown">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (key of filteredKeys(); track key) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedKey() === key"
-                  (click)="selectKey(key)"
-                >
-                  {{ key }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('chordType')"
-          >
-            {{ selectedChordType() }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'chordType') {
-            <div class="sentence-toolbox__dropdown">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (chord of filteredChordTypes(); track chord) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedChordType() === chord"
-                  (click)="selectChordType(chord)"
-                >
-                  {{ chord }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <span class="sentence-toolbox__text">on fretboard</span>
-      }
-
-      <!-- Interval pattern path -->
-      @if (showKind() === 'intervalPattern') {
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('pattern')"
-          >
-            {{ selectedPattern().label }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'pattern') {
-            <div class="sentence-toolbox__dropdown sentence-toolbox__dropdown--wide">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (pattern of filteredPatterns(); track pattern.label) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedPattern().label === pattern.label"
-                  (click)="selectPattern(pattern)"
-                >
-                  <span class="sentence-toolbox__option-label">{{ pattern.label }}</span>
-                  <span class="sentence-toolbox__option-intervals">[{{ pattern.intervals.join(', ') }}]</span>
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <span class="sentence-toolbox__text">in</span>
-
-        <div class="sentence-toolbox__chip-wrapper">
-          <button
-            class="sentence-toolbox__chip sentence-toolbox__chip--select"
-            (click)="toggleDropdown('key')"
-          >
-            {{ selectedKey() }}
-            <span class="sentence-toolbox__arrow">▼</span>
-          </button>
-          @if (openDropdown() === 'key') {
-            <div class="sentence-toolbox__dropdown">
-              <input
-                class="sentence-toolbox__filter"
-                type="text"
-                placeholder="filter..."
-                (input)="onFilterInput($event)"
-                (keydown)="$event.stopPropagation()"
-                autofocus
-              />
-              @for (key of filteredKeys(); track key) {
-                <button
-                  class="sentence-toolbox__option"
-                  [class.sentence-toolbox__option--selected]="selectedKey() === key"
-                  (click)="selectKey(key)"
-                >
-                  {{ key }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <span class="sentence-toolbox__text">on fretboard</span>
       }
     </div>
-  }
 
-  <!-- Compare sentence -->
-  @if (intent() === 'compare') {
-    <div class="sentence-toolbox__sentence">
-      <span class="sentence-toolbox__text">Compare scale</span>
-
+    <!-- Scale path -->
+    @if (showKind() === 'scale') {
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
-          (click)="toggleDropdown('compareScaleKey')"
+          (click)="toggleDropdown('key')"
         >
-          {{ compareScaleKey() }}
+          {{ selectedKey() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'compareScaleKey') {
+        @if (openDropdown() === 'key') {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -287,8 +82,8 @@
             @for (key of filteredKeys(); track key) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="compareScaleKey() === key"
-                (click)="selectCompareScaleKey(key)"
+                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                (click)="selectKey(key)"
               >
                 {{ key }}
               </button>
@@ -300,12 +95,12 @@
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
-          (click)="toggleDropdown('compareScaleType')"
+          (click)="toggleDropdown('scaleType')"
         >
-          {{ compareScaleType() }}
+          {{ selectedScaleType() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'compareScaleType') {
+        @if (openDropdown() === 'scaleType') {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -318,8 +113,8 @@
             @for (scale of filteredScaleTypes(); track scale) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="compareScaleType() === scale"
-                (click)="selectCompareScaleType(scale)"
+                [class.sentence-toolbox__option--selected]="selectedScaleType() === scale"
+                (click)="selectScaleType(scale)"
               >
                 {{ scale }}
               </button>
@@ -328,17 +123,20 @@
         }
       </div>
 
-      <span class="sentence-toolbox__text">with chord</span>
+      <span class="sentence-toolbox__text">on fretboard</span>
+    }
 
+    <!-- Chord path -->
+    @if (showKind() === 'chord') {
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
-          (click)="toggleDropdown('compareChordKey')"
+          (click)="toggleDropdown('key')"
         >
-          {{ compareChordKey() }}
+          {{ selectedKey() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'compareChordKey') {
+        @if (openDropdown() === 'key') {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -351,8 +149,8 @@
             @for (key of filteredKeys(); track key) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="compareChordKey() === key"
-                (click)="selectCompareChordKey(key)"
+                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                (click)="selectKey(key)"
               >
                 {{ key }}
               </button>
@@ -364,12 +162,12 @@
       <div class="sentence-toolbox__chip-wrapper">
         <button
           class="sentence-toolbox__chip sentence-toolbox__chip--select"
-          (click)="toggleDropdown('compareChordType')"
+          (click)="toggleDropdown('chordType')"
         >
-          {{ compareChordType() }}
+          {{ selectedChordType() }}
           <span class="sentence-toolbox__arrow">▼</span>
         </button>
-        @if (openDropdown() === 'compareChordType') {
+        @if (openDropdown() === 'chordType') {
           <div class="sentence-toolbox__dropdown">
             <input
               class="sentence-toolbox__filter"
@@ -382,8 +180,8 @@
             @for (chord of filteredChordTypes(); track chord) {
               <button
                 class="sentence-toolbox__option"
-                [class.sentence-toolbox__option--selected]="compareChordType() === chord"
-                (click)="selectCompareChordType(chord)"
+                [class.sentence-toolbox__option--selected]="selectedChordType() === chord"
+                (click)="selectChordType(chord)"
               >
                 {{ chord }}
               </button>
@@ -391,6 +189,209 @@
           </div>
         }
       </div>
+
+      <span class="sentence-toolbox__text">on fretboard</span>
+    }
+
+    <!-- Interval pattern path -->
+    @if (showKind() === 'intervalPattern') {
+      <div class="sentence-toolbox__chip-wrapper">
+        <button
+          class="sentence-toolbox__chip sentence-toolbox__chip--select"
+          (click)="toggleDropdown('pattern')"
+        >
+          {{ selectedPattern().label }}
+          <span class="sentence-toolbox__arrow">▼</span>
+        </button>
+        @if (openDropdown() === 'pattern') {
+          <div class="sentence-toolbox__dropdown sentence-toolbox__dropdown--wide">
+            <input
+              class="sentence-toolbox__filter"
+              type="text"
+              placeholder="filter..."
+              (input)="onFilterInput($event)"
+              (keydown)="$event.stopPropagation()"
+              autofocus
+            />
+            @for (pattern of filteredPatterns(); track pattern.label) {
+              <button
+                class="sentence-toolbox__option"
+                [class.sentence-toolbox__option--selected]="selectedPattern().label === pattern.label"
+                (click)="selectPattern(pattern)"
+              >
+                <span class="sentence-toolbox__option-label">{{ pattern.label }}</span>
+                <span class="sentence-toolbox__option-intervals">[{{ pattern.intervals.join(', ') }}]</span>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <span class="sentence-toolbox__text">in</span>
+
+      <div class="sentence-toolbox__chip-wrapper">
+        <button
+          class="sentence-toolbox__chip sentence-toolbox__chip--select"
+          (click)="toggleDropdown('key')"
+        >
+          {{ selectedKey() }}
+          <span class="sentence-toolbox__arrow">▼</span>
+        </button>
+        @if (openDropdown() === 'key') {
+          <div class="sentence-toolbox__dropdown">
+            <input
+              class="sentence-toolbox__filter"
+              type="text"
+              placeholder="filter..."
+              (input)="onFilterInput($event)"
+              (keydown)="$event.stopPropagation()"
+              autofocus
+            />
+            @for (key of filteredKeys(); track key) {
+              <button
+                class="sentence-toolbox__option"
+                [class.sentence-toolbox__option--selected]="selectedKey() === key"
+                (click)="selectKey(key)"
+              >
+                {{ key }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <span class="sentence-toolbox__text">on fretboard</span>
+    }
+  }
+
+  <!-- Compare sentence -->
+  @if (intent() === 'compare') {
+    <span class="sentence-toolbox__text">scale</span>
+
+    <div class="sentence-toolbox__chip-wrapper">
+      <button
+        class="sentence-toolbox__chip sentence-toolbox__chip--select"
+        (click)="toggleDropdown('compareScaleKey')"
+      >
+        {{ compareScaleKey() }}
+        <span class="sentence-toolbox__arrow">▼</span>
+      </button>
+      @if (openDropdown() === 'compareScaleKey') {
+        <div class="sentence-toolbox__dropdown">
+          <input
+            class="sentence-toolbox__filter"
+            type="text"
+            placeholder="filter..."
+            (input)="onFilterInput($event)"
+            (keydown)="$event.stopPropagation()"
+            autofocus
+          />
+          @for (key of filteredKeys(); track key) {
+            <button
+              class="sentence-toolbox__option"
+              [class.sentence-toolbox__option--selected]="compareScaleKey() === key"
+              (click)="selectCompareScaleKey(key)"
+            >
+              {{ key }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="sentence-toolbox__chip-wrapper">
+      <button
+        class="sentence-toolbox__chip sentence-toolbox__chip--select"
+        (click)="toggleDropdown('compareScaleType')"
+      >
+        {{ compareScaleType() }}
+        <span class="sentence-toolbox__arrow">▼</span>
+      </button>
+      @if (openDropdown() === 'compareScaleType') {
+        <div class="sentence-toolbox__dropdown">
+          <input
+            class="sentence-toolbox__filter"
+            type="text"
+            placeholder="filter..."
+            (input)="onFilterInput($event)"
+            (keydown)="$event.stopPropagation()"
+            autofocus
+          />
+          @for (scale of filteredScaleTypes(); track scale) {
+            <button
+              class="sentence-toolbox__option"
+              [class.sentence-toolbox__option--selected]="compareScaleType() === scale"
+              (click)="selectCompareScaleType(scale)"
+            >
+              {{ scale }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <span class="sentence-toolbox__text">with chord</span>
+
+    <div class="sentence-toolbox__chip-wrapper">
+      <button
+        class="sentence-toolbox__chip sentence-toolbox__chip--select"
+        (click)="toggleDropdown('compareChordKey')"
+      >
+        {{ compareChordKey() }}
+        <span class="sentence-toolbox__arrow">▼</span>
+      </button>
+      @if (openDropdown() === 'compareChordKey') {
+        <div class="sentence-toolbox__dropdown">
+          <input
+            class="sentence-toolbox__filter"
+            type="text"
+            placeholder="filter..."
+            (input)="onFilterInput($event)"
+            (keydown)="$event.stopPropagation()"
+            autofocus
+          />
+          @for (key of filteredKeys(); track key) {
+            <button
+              class="sentence-toolbox__option"
+              [class.sentence-toolbox__option--selected]="compareChordKey() === key"
+              (click)="selectCompareChordKey(key)"
+            >
+              {{ key }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="sentence-toolbox__chip-wrapper">
+      <button
+        class="sentence-toolbox__chip sentence-toolbox__chip--select"
+        (click)="toggleDropdown('compareChordType')"
+      >
+        {{ compareChordType() }}
+        <span class="sentence-toolbox__arrow">▼</span>
+      </button>
+      @if (openDropdown() === 'compareChordType') {
+        <div class="sentence-toolbox__dropdown">
+          <input
+            class="sentence-toolbox__filter"
+            type="text"
+            placeholder="filter..."
+            (input)="onFilterInput($event)"
+            (keydown)="$event.stopPropagation()"
+            autofocus
+          />
+          @for (chord of filteredChordTypes(); track chord) {
+            <button
+              class="sentence-toolbox__option"
+              [class.sentence-toolbox__option--selected]="compareChordType() === chord"
+              (click)="selectCompareChordType(chord)"
+            >
+              {{ chord }}
+            </button>
+          }
+        </div>
+      }
     </div>
   }
 

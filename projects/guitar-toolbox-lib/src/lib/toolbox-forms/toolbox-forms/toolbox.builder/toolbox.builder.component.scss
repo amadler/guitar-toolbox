@@ -1,48 +1,37 @@
 .sentence-toolbox {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-family: inherit;
   font-size: 14px;
   line-height: 1.5;
 
-  // --- Intent row ---
-  &__intent {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
   &__label {
-    color: var(--toolbox-text, #666);
+    color: var(--toolbox-text, inherit);
     white-space: nowrap;
   }
 
-  // --- Sentence row ---
-  &__sentence {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4px;
-    min-height: 36px;
-  }
-
-  // --- Static text in sentence ---
   &__text {
-    color: var(--toolbox-text, #333);
+    color: var(--toolbox-text, inherit);
     white-space: nowrap;
   }
 
-  // --- Chip (inline select button) ---
+  &__chip-wrapper {
+    position: relative;
+    display: inline-flex;
+  }
+
   &__chip {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 2px 10px;
-    border: 1px solid var(--toolbox-border, #ccc);
-    border-radius: 12px;
+    padding: 3px 10px;
+    border: 1px solid var(--toolbox-border-color, var(--toolbox-border, #ccc));
+    border-radius: var(--toolbox-radius-sm, 12px);
     background: var(--toolbox-chip-bg, #f5f5f5);
-    color: var(--toolbox-text, #333);
+    color: var(--toolbox-text, inherit);
     font-family: inherit;
     font-size: 14px;
     cursor: pointer;
@@ -51,13 +40,13 @@
 
     &:hover {
       background: var(--toolbox-chip-hover-bg, #e8e8e8);
-      border-color: var(--toolbox-accent, #999);
+      border-color: var(--toolbox-accent, currentColor);
     }
 
     &--active {
-      background: var(--toolbox-accent, #007bff);
-      color: #fff;
-      border-color: var(--toolbox-accent, #007bff);
+      background: var(--toolbox-accent, #005a2b);
+      color: var(--toolbox-accent-text, #fff);
+      border-color: var(--toolbox-accent, #005a2b);
     }
 
     &--select {
@@ -70,13 +59,6 @@
     opacity: 0.6;
   }
 
-  // --- Chip wrapper (position anchor for dropdown) ---
-  &__chip-wrapper {
-    position: relative;
-    display: inline-flex;
-  }
-
-  // --- Dropdown ---
   &__dropdown {
     position: absolute;
     top: 100%;
@@ -85,9 +67,9 @@
     min-width: 140px;
     max-height: 240px;
     overflow-y: auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    background: var(--toolbox-bg, #fff);
+    border: 1px solid var(--toolbox-border-color, #ccc);
+    border-radius: var(--toolbox-radius-sm, 6px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     margin-top: 4px;
 
@@ -96,23 +78,23 @@
     }
   }
 
-  // --- Filter input inside dropdown ---
   &__filter {
     width: 100%;
     padding: 6px 8px;
     border: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--toolbox-border-color, #eee);
+    background: var(--toolbox-bg, transparent);
+    color: var(--toolbox-text, inherit);
     font-family: inherit;
     font-size: 13px;
     outline: none;
     box-sizing: border-box;
 
     &:focus {
-      border-bottom-color: var(--toolbox-accent, #007bff);
+      border-bottom-color: var(--toolbox-accent, currentColor);
     }
   }
 
-  // --- Option in dropdown ---
   &__option {
     display: flex;
     align-items: center;
@@ -121,6 +103,7 @@
     padding: 6px 10px;
     border: none;
     background: transparent;
+    color: var(--toolbox-text, inherit);
     font-family: inherit;
     font-size: 13px;
     text-align: left;
@@ -129,11 +112,11 @@
     box-sizing: border-box;
 
     &:hover {
-      background: var(--toolbox-accent-light, #e8f0fe);
+      background: var(--toolbox-accent-bg, var(--toolbox-accent-light, #e8f0fe));
     }
 
     &--selected {
-      background: var(--toolbox-accent-light, #dbeafe);
+      background: var(--toolbox-accent-bg, var(--toolbox-accent-light, #dbeafe));
       font-weight: 600;
     }
   }
@@ -143,28 +126,29 @@
   }
 
   &__option-intervals {
-    color: #999;
+    color: var(--toolbox-muted, #999);
     font-size: 11px;
     margin-left: 8px;
     font-family: monospace;
   }
 
-  // --- Submit button ---
   &__submit {
-    align-self: flex-start;
-    padding: 6px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 16px;
     border: none;
-    border-radius: 6px;
-    background: var(--toolbox-accent, #007bff);
-    color: #fff;
+    border-radius: var(--toolbox-radius-sm, 6px);
+    background: var(--toolbox-accent, #005a2b);
+    color: var(--toolbox-accent-text, #fff);
     font-family: inherit;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s, opacity 0.15s;
 
     &:hover {
-      background: var(--toolbox-accent-hover, #0056b3);
+      opacity: 0.9;
     }
   }
 }
